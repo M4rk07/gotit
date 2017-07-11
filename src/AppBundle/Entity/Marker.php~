@@ -1,0 +1,123 @@
+<?php
+namespace AppBundle\Entity;
+
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+
+/**
+ * @ORM\Entity
+ * @ORM\Table(name="marker")
+ */
+class Marker
+{
+    /**
+     * @ORM\Column(type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $marker_id;
+    /**
+     * @ORM\Column(type="float")
+     */
+    private $lat;
+    /**
+     * @ORM\Column(type="float")
+     * @Assert\NotBlank()
+     */
+    private $lng;
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $num_of_items;
+    /**
+     * @ORM\OneToMany(targetEntity="Item", mappedBy="marker")
+     */
+    private $items;
+
+    public function __construct() {
+        $this->items = new ArrayCollection();
+    }
+
+    /**
+     * Get markerId
+     *
+     * @return integer
+     */
+    public function getMarkerId()
+    {
+        return $this->marker_id;
+    }
+
+    /**
+     * Set lat
+     *
+     * @param float $lat
+     *
+     * @return Marker
+     */
+    public function setLat($lat)
+    {
+        $this->lat = $lat;
+
+        return $this;
+    }
+
+    /**
+     * Get lat
+     *
+     * @return float
+     */
+    public function getLat()
+    {
+        return $this->lat;
+    }
+
+    /**
+     * Set lng
+     *
+     * @param float $lng
+     *
+     * @return Marker
+     */
+    public function setLng($lng)
+    {
+        $this->lng = $lng;
+
+        return $this;
+    }
+
+    /**
+     * Get lng
+     *
+     * @return float
+     */
+    public function getLng()
+    {
+        return $this->lng;
+    }
+
+    /**
+     * Set numOfItems
+     *
+     * @param integer $numOfItems
+     *
+     * @return Marker
+     */
+    public function setNumOfItems($numOfItems)
+    {
+        $this->num_of_items = $numOfItems;
+
+        return $this;
+    }
+
+    /**
+     * Get numOfItems
+     *
+     * @return integer
+     */
+    public function getNumOfItems()
+    {
+        return $this->num_of_items;
+    }
+}

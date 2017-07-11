@@ -1,0 +1,128 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+<div id="sideBar" class="navbar navbar-fixed-left">
+    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+        <span id="displayNameSpan">{{ app.user.displayName }}</span>
+    {% else %}
+        <a onclick="showRegistrationForm()">Register to pin!</a>
+    {% endif %}
+    <hr>
+</div>
+
+{% if is_granted('IS_AUTHENTICATED_FULLY') %}
+    <a class="btn btn-primary loginBtn" href="{{ path('logout') }}">Log Out</a>
+{% else %}
+    <button class="btn btn-primary loginBtn" onclick="showLoginForm()">Log In</button>
+{% endif %}
+
+
+<div id="map"></div>
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="mainModal" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Bag</h4>
+                <button type="button" class="close" data-dismiss="modal" onclick="closeCurrentMarker()">&times;</button>
+            </div>
+            <div class="modal-body" id="mainListing">
+            </div>
+            <div class="modal-footer">
+                <div class="container-fluid">
+                    <div class="form-group" id="notifyFormElements">
+                        <input type="text" id="itemDescription" class="form-control" placeholder="What have you found here?">
+                        <input type="file" name="image" id="image" accept="image/jpeg, image/png" onchange="imageOptimization(this)" >
+                        <button type="button" class="btn btn-primary" id="notify" onclick="saveItemData()">Notify</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="loginModal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <ul class="nav nav-tabs" id="accTab">
+                    <li class="active"><a href="#login" id="loginTab">Log In</a></li>
+                    <li><a href="#register" id="registrationTab">Register</a></li>
+                </ul>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="login">
+                            <form action="{{ path('login') }}" method="post">
+                                <div class="form-group" id="loginForm">
+                                    <input type="email" class="form-control" name="_username" id="loginUsername" placeholder="Email"
+                                            {% if last_username is defined and last_username != null %}
+                                        value="{{ last_username }}"
+                                            {% endif %}>
+                                    <input type="password" class="form-control" name="_password" id="loginPassword" placeholder="Password">
+                                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                                    <button type="submit" class="btn btn-primary">Login</button>
+                                    <div id="loginFormMessage">
+                                        {% if error_message is defined and error_message != null %}
+                                            <div class="alert-danger">{{ error_message }}</div>
+                                        {% endif %}
+                                        {% if success_message is defined and success_message != null %}
+                                            <div class="alert-success">{{ success_message }}</div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="tab-pane" id="register">
+                            <form action="{{ path('user_registration') }}" method="post">
+                                <div class="form-group" id="registrationForm">
+                                    <input type="text" class="form-control" name="displayName" id="regDisplayName" placeholder="*Display name">
+                                    <input type="email" class="form-control" name="email" id="regEmail" placeholder="*Email">
+                                    <input type="password" class="form-control" name="password" id="regPassword" placeholder="*Password">
+                                    <input type="password" class="form-control" name="repeatedPassword" id="regRepeatedPassword" placeholder="*Repeat password">
+                                    <input type="text" class="form-control" name="phoneNumber" id="regPhoneNumber" placeholder="Phone number">
+                                    <button type="submit" class="btn btn-primary">Register</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/style.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/bootstrap.min.css') }}">
+{% endblock %}
+
+{% block javascripts %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="{{ asset('js/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('js/bootstrap-tab.js') }}"></script>
+    <script src="{{ asset('js/map.js') }}"></script>
+    <script src="{{ asset('js/functions.js') }}"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBXoPTmKkgeHh0YNI1Ra7X9ueVVN-h7SyI&callback=initMap"></script>
+
+    {% if login is defined and login == 1 %}
+        <script>
+            showLoginForm();
+        </script>
+    {% endif %}
+
+{% endblock %}
