@@ -8,9 +8,11 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\EndUser;
 use AppBundle\Entity\Item;
 use AppBundle\Entity\Marker;
 use JMS\Serializer\SerializerBuilder;
+use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -54,10 +56,11 @@ class MarkerController extends Controller
         $em->getConnection()->beginTransaction();
 
         try {
+            $user = $this->get('security.token_storage')->getToken()->getUser();
             // Create Marker object
             $marker = new Marker();
-            $marker->setLat($lat)
-                ->setLng($lng);
+            $marker->setLat(number_format($lat, 6))
+                ->setLng(number_format($lng, 6));
 
             // Create Item object
             $item = new Item();
@@ -67,6 +70,8 @@ class MarkerController extends Controller
             // Set their relations
             $item->setMarker($marker);
             $marker->addItem($item);
+            $marker->setUser($user);
+            $item->setUser($user);
 
             // Validate properties
             $mErrors = $validator->validate($marker);
@@ -75,11 +80,22 @@ class MarkerController extends Controller
                 throw new \Exception();
             }
 
+            $markerDuplicate = $em
+                ->getRepository('AppBundle:Marker')
+                ->findOneBy(array('lat' => $marker->getLat(), 'lng' => $marker->getLng()));
+
+            if(!empty($markerDuplicate)) {
+                $item->setMarker($markerDuplicate);
+                $em->persist($item);
+            }
+            else
+                $em->persist($marker);
+
             // Generate a unique name for the file before saving it
             $item->saveImage();
 
             // Commit transaction
-            $em->persist($marker);
+
             $em->flush();
             $em->getConnection()->commit();
         }
@@ -103,7 +119,6 @@ class MarkerController extends Controller
         $jsonContent = $serializer->serialize($items, 'json');
 
         return new Response($jsonContent, 200, array("Content-Type" => "application/json"));
-
     }
 
     /**

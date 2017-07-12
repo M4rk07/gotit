@@ -4,7 +4,16 @@
 
 <div id="sideBar" class="navbar navbar-fixed-left">
     {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-        <span id="displayNameSpan">{{ app.user.displayName }}</span>
+        <div class="dropdown">
+            <a class="displayName dropdown-toggle" data-toggle="dropdown">
+                {{ app.user.displayName }}
+            </a>
+            <div class="dropdown-menu userInfo">
+                Phone: <strong>{{ app.user.phoneNumber }}</strong>
+                <br>
+                Email: <strong>{{ app.user.username }}</strong>
+            </div>
+        </div>
     {% else %}
         <a onclick="showRegistrationForm()">Register to pin!</a>
     {% endif %}
@@ -20,8 +29,6 @@
 
 <div id="map"></div>
 
-
-
 <!-- Modal -->
 <div class="modal fade" id="mainModal" role="dialog">
     <div class="modal-dialog">
@@ -29,7 +36,7 @@
         <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Bag</h4>
+                <h4 class="modal-title" id="numOfItems">Bag</h4>
                 <button type="button" class="close" data-dismiss="modal" onclick="closeCurrentMarker()">&times;</button>
             </div>
             <div class="modal-body" id="mainListing">
@@ -65,21 +72,10 @@
                         <div class="tab-pane active" id="login">
                             <form action="{{ path('login') }}" method="post">
                                 <div class="form-group" id="loginForm">
-                                    <input type="email" class="form-control" name="_username" id="loginUsername" placeholder="Email"
-                                            {% if last_username is defined and last_username != null %}
-                                        value="{{ last_username }}"
-                                            {% endif %}>
+                                    <input type="email" class="form-control" name="_username" id="loginUsername" placeholder="Email">
                                     <input type="password" class="form-control" name="_password" id="loginPassword" placeholder="Password">
                                     <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
                                     <button type="submit" class="btn btn-primary">Login</button>
-                                    <div id="loginFormMessage">
-                                        {% if error_message is defined and error_message != null %}
-                                            <div class="alert-danger">{{ error_message }}</div>
-                                        {% endif %}
-                                        {% if success_message is defined and success_message != null %}
-                                            <div class="alert-success">{{ success_message }}</div>
-                                        {% endif %}
-                                    </div>
                                 </div>
                             </form>
                         </div>
@@ -96,8 +92,6 @@
                             </form>
                         </div>
                     </div>
-
-
                 </div>
             </div>
         </div>
@@ -117,12 +111,6 @@
     <script src="{{ asset('js/bootstrap-tab.js') }}"></script>
     <script src="{{ asset('js/map.js') }}"></script>
     <script src="{{ asset('js/functions.js') }}"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBXoPTmKkgeHh0YNI1Ra7X9ueVVN-h7SyI&callback=initMap"></script>
-
-    {% if login is defined and login == 1 %}
-        <script>
-            showLoginForm();
-        </script>
-    {% endif %}
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAqRzxX436gnjgKE5grpz70WM-A8YmmuxY&callback=initMap"></script>
 
 {% endblock %}

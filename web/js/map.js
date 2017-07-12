@@ -1,15 +1,16 @@
 var marker;
+var markerClosable = false;
 var map;
 var imageBlob = null;
 var shownMarkers = [];
-var baseUrl = "http://localhost/gotit/web/app.php";
+var baseUrl = "http://localhost/gotit/web/app_dev.php";
+var baseImgUrl = "http://localhost/gotit/web/images";
 // Config
 var maxImageSize = 800;
 
 jQuery(document).ready(function($){
     initMap();
     getMarkers();
-    getConfiguration();
 });
 
 function initMap() {
@@ -39,14 +40,14 @@ function initMap() {
     }
 
     google.maps.event.addListener(map, "click", function(event) {
-        if(marker != null) {
-            marker.setMap(null);
-        }
+        closeCurrentMarker();
+        clearTheListing();
 
         marker = new google.maps.Marker({
             position: event.latLng,
             map: map
         });
+        markerClosable = true;
 
         $("#mainModal").modal('show');
     });
@@ -109,17 +110,6 @@ function saveItemData() {
     });
 }
 
-function getConfiguration() {
-    var endpoint = '/config';
-
-    sendRequest(endpoint, "GET", null, function(data, responseCode) {
-        if (responseCode == 200) {
-            data = JSON.parse(data);
-            maxImageSize = data.maxImageSize;
-        }
-    });
-}
-
 function getMarkers() {
     var endpoint = '/markers';
 
@@ -135,20 +125,22 @@ function getMarkers() {
 
                 var icon = {};
 
-                var marker = new google.maps.Marker({
+                var itemMarker = new google.maps.Marker({
                     map: map,
                     position: point,
                     label: icon.label
                 });
 
                 var infowindow = new google.maps.InfoWindow();
-                marker.addListener('click', function() {
+                itemMarker.addListener('click', function() {
                     closeCurrentMarker();
+                    marker = itemMarker;
+                    markerClosable = false;
                     $("#mainModal").modal('show');
                     getItems(markerElem.marker_id);
                 });
 
-                shownMarkers.push({marker: marker});
+                shownMarkers.push({marker: itemMarker});
             });
         }
     });
@@ -158,13 +150,21 @@ function getItems(markerId) {
     var endpoint = '/items?markerId=' + markerId;
     sendRequest(endpoint, "GET", null, function(data, responseCode) {
         if (responseCode == 200) {
+            data = JSON.parse(data);
             document.getElementById("mainListing").innerHTML = "";
-            document.getElementById("mainListing").appendChild(getItemsListing(JSON.parse(data)));
+            document.getElementById("mainListing").appendChild(getItemsListing(data));
+            var numOfItems = data.length;
+            var itemsWord = "items";
+            if(numOfItems == 1)
+                itemsWord = "item";
+
+            document.getElementById("numOfItems").innerText = data.length + " " + itemsWord;
         }
     });
 }
 
 function getItemsListing(items) {
+
     var itemlisting = document.createElement('div');
     var row = document.createElement("row");
     var firstCol12 = document.createElement("div");
@@ -172,9 +172,46 @@ function getItemsListing(items) {
     firstCol12.setAttribute("class", "col-md-12");
 
     Array.prototype.forEach.call(items, function (itemElem){
-        var description = document.createElement("strong");
+        var wrapper = document.createElement("div");
+        wrapper.setAttribute("class", "list-group");
+
+        var description = document.createElement("span");
+        description.setAttribute("class", "itemDescription");
         description.textContent = itemElem.description;
-        firstCol12.appendChild(description);
+        wrapper.appendChild(description);
+
+        var dropdown = document.createElement("div");
+        dropdown.setAttribute("class", "dropdown");
+
+        var username = document.createElement("a");
+        username.setAttribute("class", "dropdown-toggle displayName");
+        username.setAttribute("data-toggle", "dropdown");
+        username.textContent = itemElem.user.display_name;
+
+        var infoWindow = document.createElement("div");
+        infoWindow.setAttribute("class", "dropdown-menu userInfo");
+
+        if(itemElem.user.phone_number != null)
+            infoWindow.innerHTML = 'Phone: <strong>'+itemElem.user.phone_number+'</strong>';
+        else
+            infoWindow.innerHTML = 'No contact information.';
+
+        dropdown.appendChild(username);
+        dropdown.appendChild(infoWindow);
+        wrapper.appendChild(dropdown);
+
+        if(itemElem.image_url != null) {
+            var image = document.createElement("img");
+            image.setAttribute("src", baseImgUrl + "/" + itemElem.image_url);
+            image.setAttribute("class", "itemImage");
+            wrapper.appendChild(image);
+        }
+
+        var hr = document.createElement("hr");
+        wrapper.appendChild(hr);
+
+        firstCol12.appendChild(wrapper);
+
     });
 
     row.appendChild(firstCol12);
@@ -185,10 +222,15 @@ function getItemsListing(items) {
 
 function closeCurrentMarker() {
     imageBlob = null;
-    if(marker!=null) {
+    if(marker!=null && markerClosable) {
         marker.setMap(null);
         marker = null;
     }
+}
+
+function clearTheListing() {
+    document.getElementById("mainListing").innerHTML = "";
+    document.getElementById("numOfItems").innerText = "Bag";
 }
 
 function dataURLToBlob(dataURL) {

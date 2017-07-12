@@ -44,6 +44,12 @@ class Marker
      * @SRL\Exclude
      */
     private $items;
+    /**
+     * @ORM\ManyToOne(targetEntity="EndUser", inversedBy="markers")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="user_id")
+     * @SRL\Type("AppBundle\Entity\EndUser")
+     */
+    private $user;
 
     public function __construct() {
         $this->items = new ArrayCollection();
@@ -129,6 +135,23 @@ class Marker
     public function getNumOfItems()
     {
         return $this->num_of_items;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
+     * @param mixed $user
+     */
+    public function setUser($user)
+    {
+        $this->user = $user;
+        return $this;
     }
 
     /**

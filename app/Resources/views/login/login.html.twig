@@ -1,0 +1,73 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    <div class="container">
+        <div class="form-signin">
+
+            <ul class="nav nav-tabs" id="accTab">
+                <li class="active"><a href="#login" id="loginTab">Log In</a></li>
+                <li><a href="#register" id="registrationTab">Register</a></li>
+            </ul>
+
+            <div class="tab-content">
+                <div class="tab-pane active" id="login">
+                    <form action="{{ path('login') }}" method="post">
+                        <div class="form-group" id="loginForm">
+                            <input type="email" class="form-control" name="_username" id="loginUsername" placeholder="Email"
+                                    {% if last_username is defined and last_username != null %}
+                                        value="{{ last_username }}"
+                                    {% endif %}>
+                            <input type="password" class="form-control" name="_password" id="loginPassword" placeholder="Password">
+                            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                            <button type="submit" class="btn btn-primary">Login</button>
+                            <div id="loginFormMessage">
+                                {% if error_message is defined and error_message != null %}
+                                    <div class="alert-danger">{{ error_message }}</div>
+                                {% endif %}
+                                {% if success_message is defined and success_message != null %}
+                                    <div class="alert-success">{{ success_message }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="tab-pane" id="register">
+                    <form action="{{ path('user_registration') }}" method="post">
+                        <div class="form-group" id="registrationForm">
+                            <input type="text" class="form-control" name="displayName" id="regDisplayName" placeholder="*Display name">
+                            <input type="email" class="form-control" name="email" id="regEmail" placeholder="*Email">
+                            <input type="password" class="form-control" name="password" id="regPassword" placeholder="*Password">
+                            <input type="password" class="form-control" name="repeatedPassword" id="regRepeatedPassword" placeholder="*Repeat password">
+                            <input type="text" class="form-control" name="phoneNumber" id="regPhoneNumber" placeholder="Phone number">
+                            <button type="submit" class="btn btn-primary">Register</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div> <!-- /container -->
+
+{% endblock %}
+
+{% block stylesheets %}
+<link rel="stylesheet" type="text/css" href="{{ asset('css/style.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ asset('css/bootstrap.min.css') }}">
+{% endblock %}
+
+{% block javascripts %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="{{ asset('js/bootstrap.min.js') }}"></script>
+<script src="{{ asset('js/bootstrap-tab.js') }}"></script>
+<script src="{{ asset('js/map.js') }}"></script>
+<script src="{{ asset('js/functions.js') }}"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBXoPTmKkgeHh0YNI1Ra7X9ueVVN-h7SyI&callback=initMap"></script>
+
+{% if login is defined and login == 1 %}
+<script>
+    showLoginForm();
+</script>
+{% endif %}
+
+{% endblock %}

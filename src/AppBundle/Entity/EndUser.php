@@ -61,6 +61,18 @@ class EndUser implements AdvancedUserInterface, \Serializable
      * @ORM\Column(type="boolean")
      */
     private $is_active = 1;
+    /**
+     * @ORM\OneToMany(targetEntity="Marker", mappedBy="user", cascade={"persist", "remove"})
+     * @SRL\Type("ArrayCollection<AppBundle\Entity\Marker>")
+     * @SRL\Exclude
+     */
+    private $markers;
+    /**
+     * @ORM\OneToMany(targetEntity="Item", mappedBy="user", cascade={"persist", "remove"})
+     * @SRL\Type("ArrayCollection<AppBundle\Entity\Item>")
+     * @SRL\Exclude
+     */
+    private $items;
 
     public function getRoles()
     {
@@ -135,6 +147,40 @@ class EndUser implements AdvancedUserInterface, \Serializable
     public function setPhoneNumber($phone_number)
     {
         $this->phone_number = $phone_number;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getItems()
+    {
+        return $this->items;
+    }
+
+    /**
+     * @param mixed $items
+     */
+    public function setItems($items)
+    {
+        $this->items = $items;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMarkers()
+    {
+        return $this->markers;
+    }
+
+    /**
+     * @param mixed $markers
+     */
+    public function setMarkers($markers)
+    {
+        $this->markers = $markers;
         return $this;
     }
 

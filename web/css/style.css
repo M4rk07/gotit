@@ -18,6 +18,7 @@ a {
 
 hr {
     color: #636c72!important;
+    width: 100%;
 }
 
 .btn {
@@ -73,16 +74,7 @@ hr {
     font-size: 12px
 }
 
-#loginForm * {
-    margin-top: 7px;
-    margin-bottom: 7px;
-    padding-top: 5px;
-    padding-bottom: 5px;
-    display: block;
-    width: 100%;
-}
-
-#registrationForm * {
+.form-group * {
     margin-top: 7px;
     margin-bottom: 7px;
     padding-top: 5px;
@@ -92,6 +84,7 @@ hr {
 }
 
 .modal-footer {
+    border-top: solid;
     padding: 0;
 }
 
@@ -105,7 +98,43 @@ hr {
     padding: 15px;
 }
 
-#displayNameSpan {
+.displayName {
     font-weight: bold;
     color: #025aa5;
+    font-size: 16px;
 }
+
+.form-signin {
+    max-width: 400px;
+    padding: 15px;
+    margin: 0 auto;
+}
+.form-signin .form-signin-heading,
+.form-signin .checkbox {
+    margin-bottom: 10px;
+}
+.form-signin .checkbox {
+    font-weight: normal;
+}
+
+.list-group {
+    margin-top: 10px;
+}
+
+.itemDescription {
+    font-size: 17px;
+}
+
+.itemImage {
+    width: 100%;
+    height: auto;
+}
+
+.dropdown-menu {
+    padding: 10px!important;
+}
+
+.userInfo * {
+    max-width: 300px!important;
+}
+

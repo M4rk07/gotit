@@ -53,6 +53,12 @@ class Item
      * )
      */
     private $image;
+    /**
+     * @ORM\ManyToOne(targetEntity="EndUser", inversedBy="items")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="user_id")
+     * @SRL\Type("AppBundle\Entity\EndUser")
+     */
+    private $user;
 
     /**
      * Get itemId
@@ -110,6 +116,23 @@ class Item
     public function getImageUrl()
     {
         return $this->image_url;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
+     * @param mixed $user
+     */
+    public function setUser($user)
+    {
+        $this->user = $user;
+        return $this;
     }
 
     /**

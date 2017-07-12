@@ -72,7 +72,6 @@ class RegistrationController extends Controller
             'last_username' => $username,
             'success_message' => "Thank you for registration! You can log in now."
         ]);
-
     }
 
 }
