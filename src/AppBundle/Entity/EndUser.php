@@ -40,6 +40,7 @@ class EndUser implements AdvancedUserInterface, \Serializable
     /**
      * @ORM\Column(type="string")
      * @SRL\Type("string")
+     * @SRL\Exclude
      */
     private $password;
     /**
@@ -50,6 +51,7 @@ class EndUser implements AdvancedUserInterface, \Serializable
     /**
      * @Assert\NotBlank()
      * @Assert\Length(max=4096)
+     * @SRL\Exclude
      */
     private $plainPassword;
     /**
@@ -64,13 +66,13 @@ class EndUser implements AdvancedUserInterface, \Serializable
     /**
      * @ORM\OneToMany(targetEntity="Marker", mappedBy="user", cascade={"persist", "remove"})
      * @SRL\Type("ArrayCollection<AppBundle\Entity\Marker>")
-     * @SRL\Exclude
+     * @SRL\Groups({"users_and_markers"})
      */
     private $markers;
     /**
      * @ORM\OneToMany(targetEntity="Item", mappedBy="user", cascade={"persist", "remove"})
      * @SRL\Type("ArrayCollection<AppBundle\Entity\Item>")
-     * @SRL\Exclude
+     * @SRL\Groups({"users_and_items"})
      */
     private $items;
 

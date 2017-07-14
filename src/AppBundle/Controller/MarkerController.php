@@ -10,7 +10,9 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\EndUser;
 use AppBundle\Entity\Item;
+use AppBundle\Entity\ItemType;
 use AppBundle\Entity\Marker;
+use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerBuilder;
 use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -43,12 +45,13 @@ class MarkerController extends Controller
 
     public function insertItem(Request $request) {
 
-        $this->denyAccessUnlessGranted('ROLE_USER', null, 'Unable to access this page!');
+        //$this->denyAccessUnlessGranted('ROLE_USER', null, 'Unable to access this page!');
 
         $lat = $request->request->get("lat");
         $lng = $request->request->get("lng");
         $description = $request->request->get("description");
         $image = $request->files->get("image");
+        $type = $request->request->get("type");
 
         $em = $this->getDoctrine()->getManager();
         $validator = $this->get('validator');
@@ -66,6 +69,16 @@ class MarkerController extends Controller
             $item = new Item();
             $item->setDescription($description)
                 ->setImage($image);
+
+            if(!empty($type)) {
+                $itemType = $em->getRepository('AppBundle:ItemType')->find($type);
+                if(empty($type))
+                    throw new \Exception();
+                else
+                    $item->setType($itemType);
+            }
+            else
+                $item->setType("OTHER");
 
             // Set their relations
             $item->setMarker($marker);
@@ -85,6 +98,10 @@ class MarkerController extends Controller
                 ->findOneBy(array('lat' => $marker->getLat(), 'lng' => $marker->getLng()));
 
             if(!empty($markerDuplicate)) {
+                $markerDuplicate->incNumOfItems()
+                    ->setType("PLUS1");
+                $em->merge($markerDuplicate);
+
                 $item->setMarker($markerDuplicate);
                 $em->persist($item);
             }
@@ -116,7 +133,7 @@ class MarkerController extends Controller
         $items = $em->getRepository('AppBundle:Item')->findBy(array('marker' => $marker));
 
         $serializer = SerializerBuilder::create()->build();
-        $jsonContent = $serializer->serialize($items, 'json');
+        $jsonContent = $serializer->serialize($items, 'json', SerializationContext::create()->setGroups(array('Default')));
 
         return new Response($jsonContent, 200, array("Content-Type" => "application/json"));
     }
@@ -130,7 +147,7 @@ class MarkerController extends Controller
         $markers = $this->getDoctrine()->getManager()->getRepository('AppBundle:Marker')->findAll();
 
         $serializer = SerializerBuilder::create()->build();
-        $jsonContent = $serializer->serialize($markers, 'json');
+        $jsonContent = $serializer->serialize($markers, 'json', SerializationContext::create()->setGroups(array('Default')));
 
         return new Response($jsonContent, 200, array("Content-Type" => "application/json"));
     }

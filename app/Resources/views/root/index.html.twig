@@ -39,16 +39,59 @@
                 <h4 class="modal-title" id="numOfItems">Bag</h4>
                 <button type="button" class="close" data-dismiss="modal" onclick="closeCurrentMarker()">&times;</button>
             </div>
-            <div class="modal-body" id="mainListing">
+            <div class="modal-body">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <div class='input-group'>
+                                    <input type="text" id="itemDescription" class="form-control" placeholder="What have you found here?">
+
+                                    <span class="input-group-addon">
+                                        <div class="dropdown">
+                                            <a class="dropdown-toggle" data-toggle="dropdown">
+                                                <img src="/gotit/web/images/icons/ic-other.png" class="select-icon" data-toggle="dropdown"/>
+                                            </a>
+                                            <div class="dropdown-menu dropdown-menu-right userInfo">
+
+                                                <img src="/gotit/web/images/icons/ic-documents.png" class="select-icon"/>
+                                                <img src="/gotit/web/images/icons/ic-glasses.png" class="select-icon"/>
+                                                <img src="/gotit/web/images/icons/ic-jewelry.png" class="select-icon"/>
+                                                <img src="/gotit/web/images/icons/ic-keys.png" class="select-icon"/>
+                                                <img src="/gotit/web/images/icons/ic-pet.png" class="select-icon"/>
+
+                                                <img src="/gotit/web/images/icons/ic-phone.png" class="select-icon"/>
+                                                <img src="/gotit/web/images/icons/ic-usb.png" class="select-icon"/>
+                                                <img src="/gotit/web/images/icons/ic-wallet.png" class="select-icon"/>
+                                                <img src="/gotit/web/images/icons/ic-watch.png" class="select-icon"/>
+                                                <img src="/gotit/web/images/icons/ic-other.png" class="select-icon"/>
+
+                                            </div>
+                                        </div>
+                                    </span>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-9">
+                        <div class="form-group">
+                            <input type="file" name="image" id="image" accept="image/jpeg, image/png" onchange="imageOptimization(this)" >
+                        </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group text-right">
+                                <button type="button" class="btn btn-primary" id="notify" onclick="saveItemData()">Notify</button>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                </div>
+                <div id="mainListing"></div>
             </div>
             <div class="modal-footer">
-                <div class="container-fluid">
-                    <div class="form-group" id="notifyFormElements">
-                        <input type="text" id="itemDescription" class="form-control" placeholder="What have you found here?">
-                        <input type="file" name="image" id="image" accept="image/jpeg, image/png" onchange="imageOptimization(this)" >
-                        <button type="button" class="btn btn-primary" id="notify" onclick="saveItemData()">Notify</button>
-                    </div>
-                </div>
+
             </div>
         </div>
 
@@ -103,6 +146,8 @@
 {% block stylesheets %}
     <link rel="stylesheet" type="text/css" href="{{ asset('css/style.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/bootstrap.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/bootstrap-grid.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/bootstrap-reboot.min.css') }}">
 {% endblock %}
 
 {% block javascripts %}

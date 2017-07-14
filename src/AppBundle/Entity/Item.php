@@ -31,6 +31,7 @@ class Item
      * @ORM\ManyToOne(targetEntity="Marker", inversedBy="items")
      * @ORM\JoinColumn(name="marker_id", referencedColumnName="marker_id")
      * @SRL\Type("AppBundle\Entity\Marker")
+     * @SRL\Groups({"items_and_markers"})
      */
     private $marker;
     /**
@@ -59,6 +60,11 @@ class Item
      * @SRL\Type("AppBundle\Entity\EndUser")
      */
     private $user;
+    /**
+     * @ORM\Column(type="string")
+     * @SRL\Type("string")
+     */
+    private $type = "OTHER";
 
     /**
      * Get itemId
@@ -132,6 +138,23 @@ class Item
     public function setUser($user)
     {
         $this->user = $user;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param mixed $type
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
         return $this;
     }
 

@@ -74,15 +74,6 @@ hr {
     font-size: 12px
 }
 
-.form-group * {
-    margin-top: 7px;
-    margin-bottom: 7px;
-    padding-top: 5px;
-    padding-bottom: 5px;
-    display: block;
-    width: 100%;
-}
-
 .modal-footer {
     border-top: solid;
     padding: 0;
@@ -138,3 +129,22 @@ hr {
     max-width: 300px!important;
 }
 
+/* applies to GIF and PNG images; avoids blurry edges */
+img[src$=".gif"], img[src$=".png"] {
+    image-rendering: auto;
+}
+
+.listingIcon {
+    max-width: 32px;
+    max-height: 32px;
+
+}
+
+.itemDescription {
+    word-wrap: break-word;
+}
+
+.select-icon {
+    width: 29px;
+    height: auto;
+}

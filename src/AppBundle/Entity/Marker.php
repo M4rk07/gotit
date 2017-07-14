@@ -41,7 +41,7 @@ class Marker
     /**
      * @ORM\OneToMany(targetEntity="Item", mappedBy="marker", cascade={"persist", "remove"})
      * @SRL\Type("ArrayCollection<AppBundle\Entity\Item>")
-     * @SRL\Exclude
+     * @SRL\Groups({"markers_and_items"})
      */
     private $items;
     /**
@@ -50,6 +50,11 @@ class Marker
      * @SRL\Type("AppBundle\Entity\EndUser")
      */
     private $user;
+    /**
+     * @ORM\Column(type="string")
+     * @SRL\Type("string")
+     */
+    private $type = "OTHER";
 
     public function __construct() {
         $this->items = new ArrayCollection();
@@ -128,6 +133,20 @@ class Marker
     }
 
     /**
+     * Set numOfItems
+     *
+     * @param integer $numOfItems
+     *
+     * @return Marker
+     */
+    public function incNumOfItems()
+    {
+        $this->num_of_items += 1;
+
+        return $this;
+    }
+
+    /**
      * Get numOfItems
      *
      * @return integer
@@ -135,6 +154,23 @@ class Marker
     public function getNumOfItems()
     {
         return $this->num_of_items;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param mixed $type
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+        return $this;
     }
 
     /**

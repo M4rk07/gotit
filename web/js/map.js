@@ -128,7 +128,8 @@ function getMarkers() {
                 var itemMarker = new google.maps.Marker({
                     map: map,
                     position: point,
-                    label: icon.label
+                    label: icon.label,
+                    icon: getMarkerImage(markerElem.type)
                 });
 
                 var infowindow = new google.maps.InfoWindow();
@@ -175,10 +176,22 @@ function getItemsListing(items) {
         var wrapper = document.createElement("div");
         wrapper.setAttribute("class", "list-group");
 
+        var row1 = document.createElement("div");
+        row1.setAttribute("class", "row");
+
+        var row1col1 = document.createElement("div");
+        row1col1.setAttribute("class", "col-md-1");
+        var row1col2 = document.createElement("div");
+        row1col2.setAttribute("class", "col-md-11");
+
+        var icon = document.createElement("img");
+        icon.setAttribute("class", "listingIcon");
+        icon.setAttribute("src", getIcon(itemElem.type));
+
+        var row1col2wrapper =document.createElement("div");
         var description = document.createElement("span");
         description.setAttribute("class", "itemDescription");
-        description.textContent = itemElem.description;
-        wrapper.appendChild(description);
+        description.innerHTML = itemElem.description;
 
         var dropdown = document.createElement("div");
         dropdown.setAttribute("class", "dropdown");
@@ -198,7 +211,14 @@ function getItemsListing(items) {
 
         dropdown.appendChild(username);
         dropdown.appendChild(infoWindow);
-        wrapper.appendChild(dropdown);
+        row1col2wrapper.appendChild(description);
+        row1col2wrapper.appendChild(dropdown);
+
+        row1col1.appendChild(icon);
+        row1col2.appendChild(row1col2wrapper);
+        row1.appendChild(row1col1);
+        row1.appendChild(row1col2);
+        wrapper.appendChild(row1);
 
         if(itemElem.image_url != null) {
             var image = document.createElement("img");
@@ -218,6 +238,22 @@ function getItemsListing(items) {
     itemlisting.appendChild(row);
 
     return itemlisting;
+}
+
+function getMarkerImage(type) {
+    return {
+        url: getIcon(type),
+        // This marker is 20 pixels wide by 32 pixels high.
+        scaledSize: new google.maps.Size(42, 42),
+        // The origin for this image is (0, 0).
+        origin: new google.maps.Point(0, 0),
+        // The anchor for this image is the base of the flagpole at (0, 32).
+        anchor: new google.maps.Point(0, 0)
+    };
+}
+
+function getIcon (type) {
+    return baseImgUrl + "/icons/ic-" + type.toLowerCase() + ".png";
 }
 
 function closeCurrentMarker() {

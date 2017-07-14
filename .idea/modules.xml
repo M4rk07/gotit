@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/../gotit/.idea/gotits.iml" filepath="$PROJECT_DIR$/../gotit/.idea/gotits.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/gotit.iml" filepath="$PROJECT_DIR$/.idea/gotit.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/gotits.iml" filepath="$PROJECT_DIR$/.idea/gotits.iml" />
     </modules>
   </component>
 </project>
