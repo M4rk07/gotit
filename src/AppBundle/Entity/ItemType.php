@@ -23,10 +23,13 @@ class ItemType
     /**
      * @ORM\Column(type="string")
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
      * @SRL\Type("string")
      */
     private $type_id;
+
+    public function __construct($type) {
+        $this->type_id = $type;
+    }
 
     /**
      * @return mixed

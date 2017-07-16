@@ -39,19 +39,19 @@ class MarkerController extends Controller
         if($request->getMethod() == "POST")
             return $this->insertItem($request);
         else if($request->getMethod() == "GET")
-            return $this->getItem($request);
+            return $this->getItems($request);
 
     }
 
     public function insertItem(Request $request) {
 
-        //$this->denyAccessUnlessGranted('ROLE_USER', null, 'Unable to access this page!');
+        $this->denyAccessUnlessGranted('ROLE_USER', null, 'Unable to access this page!');
 
         $lat = $request->request->get("lat");
         $lng = $request->request->get("lng");
         $description = $request->request->get("description");
         $image = $request->files->get("image");
-        $type = $request->request->get("type");
+        $itemType = $request->request->get("type");
 
         $em = $this->getDoctrine()->getManager();
         $validator = $this->get('validator');
@@ -70,21 +70,18 @@ class MarkerController extends Controller
             $item->setDescription($description)
                 ->setImage($image);
 
-            if(!empty($type)) {
-                $itemType = $em->getRepository('AppBundle:ItemType')->find($type);
-                if(empty($type))
-                    throw new \Exception();
-                else
-                    $item->setType($itemType);
-            }
-            else
-                $item->setType("OTHER");
+            $itemType = $em->getRepository('AppBundle:ItemType')->find($itemType);
+
+            $item->setType($itemType);
+            $marker->setType($itemType);
 
             // Set their relations
             $item->setMarker($marker);
             $marker->addItem($item);
             $marker->setUser($user);
             $item->setUser($user);
+
+
 
             // Validate properties
             $mErrors = $validator->validate($marker);
@@ -98,8 +95,9 @@ class MarkerController extends Controller
                 ->findOneBy(array('lat' => $marker->getLat(), 'lng' => $marker->getLng()));
 
             if(!empty($markerDuplicate)) {
+                $itemType = $em->getRepository('AppBundle:ItemType')->find("PLUS1");
                 $markerDuplicate->incNumOfItems()
-                    ->setType("PLUS1");
+                    ->setType($itemType);
                 $em->merge($markerDuplicate);
 
                 $item->setMarker($markerDuplicate);
@@ -111,8 +109,6 @@ class MarkerController extends Controller
             // Generate a unique name for the file before saving it
             $item->saveImage();
 
-            // Commit transaction
-
             $em->flush();
             $em->getConnection()->commit();
         }
@@ -121,19 +117,26 @@ class MarkerController extends Controller
             throw $e;
         }
 
-        return new JsonResponse(array("message" => "Wishing luck finding."), 200);
+        $serializer = SerializerBuilder::create()->build();
+        $jsonContent = $serializer->serialize($item, 'json',
+            SerializationContext::create()->setGroups(array('Default', 'items_and_markers')));
+
+        return new Response($jsonContent, 200, array("Content-Type" => "application/json"));
     }
 
-    function getItem(Request $request) {
+    function getItems(Request $request) {
         $markerId = $request->get('markerId');
         $em = $this->getDoctrine()->getManager();
 
         $marker = $em->getRepository('AppBundle:Marker')->find($markerId);
 
-        $items = $em->getRepository('AppBundle:Item')->findBy(array('marker' => $marker));
+        $items = $em->getRepository('AppBundle:Item')->findBy(
+            array('marker' => $marker)
+        );
 
         $serializer = SerializerBuilder::create()->build();
-        $jsonContent = $serializer->serialize($items, 'json', SerializationContext::create()->setGroups(array('Default')));
+        $jsonContent = $serializer->serialize($items, 'json',
+            SerializationContext::create()->setGroups(array('Default')));
 
         return new Response($jsonContent, 200, array("Content-Type" => "application/json"));
     }

@@ -61,10 +61,16 @@ class Item
      */
     private $user;
     /**
-     * @ORM\Column(type="string")
-     * @SRL\Type("string")
+     * @ORM\ManyToOne(targetEntity="ItemType")
+     * @ORM\JoinColumn(name="type", referencedColumnName="type_id")
+     * @SRL\Type("AppBundle\Entity\ItemType")
      */
-    private $type = "OTHER";
+    private $type;
+
+    public function __construct()
+    {
+        $this->type = new ItemType("OTHER");
+    }
 
     /**
      * Get itemId
@@ -152,7 +158,7 @@ class Item
     /**
      * @param mixed $type
      */
-    public function setType($type)
+    public function setType(\AppBundle\Entity\ItemType $type)
     {
         $this->type = $type;
         return $this;

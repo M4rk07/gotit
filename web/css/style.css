@@ -147,4 +147,6 @@ img[src$=".gif"], img[src$=".png"] {
 .select-icon {
     width: 29px;
     height: auto;
+    cursor: pointer;
 }
+

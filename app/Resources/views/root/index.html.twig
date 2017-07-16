@@ -50,22 +50,20 @@
                                     <span class="input-group-addon">
                                         <div class="dropdown">
                                             <a class="dropdown-toggle" data-toggle="dropdown">
-                                                <img src="/gotit/web/images/icons/ic-other.png" class="select-icon" data-toggle="dropdown"/>
+                                                <img src="/gotit/web/images/icons/ic-other.png" id="dropdownIcon" class="select-icon" data-toggle="dropdown"/>
                                             </a>
                                             <div class="dropdown-menu dropdown-menu-right userInfo">
+                                                <img src="/gotit/web/images/icons/ic-documents.png" onclick="setItemType('documents')" class="select-icon"/>
+                                                <img src="/gotit/web/images/icons/ic-glasses.png" onclick="setItemType('glasses')" class="select-icon"/>
+                                                <img src="/gotit/web/images/icons/ic-jewelry.png" onclick="setItemType('jewelry')" class="select-icon"/>
+                                                <img src="/gotit/web/images/icons/ic-keys.png" onclick="setItemType('keys')" class="select-icon"/>
+                                                <img src="/gotit/web/images/icons/ic-pet.png" onclick="setItemType('pet')" class="select-icon"/>
 
-                                                <img src="/gotit/web/images/icons/ic-documents.png" class="select-icon"/>
-                                                <img src="/gotit/web/images/icons/ic-glasses.png" class="select-icon"/>
-                                                <img src="/gotit/web/images/icons/ic-jewelry.png" class="select-icon"/>
-                                                <img src="/gotit/web/images/icons/ic-keys.png" class="select-icon"/>
-                                                <img src="/gotit/web/images/icons/ic-pet.png" class="select-icon"/>
-
-                                                <img src="/gotit/web/images/icons/ic-phone.png" class="select-icon"/>
-                                                <img src="/gotit/web/images/icons/ic-usb.png" class="select-icon"/>
-                                                <img src="/gotit/web/images/icons/ic-wallet.png" class="select-icon"/>
-                                                <img src="/gotit/web/images/icons/ic-watch.png" class="select-icon"/>
-                                                <img src="/gotit/web/images/icons/ic-other.png" class="select-icon"/>
-
+                                                <img src="/gotit/web/images/icons/ic-phone.png" onclick="setItemType('phone')" class="select-icon"/>
+                                                <img src="/gotit/web/images/icons/ic-usb.png" onclick="setItemType('usb')" class="select-icon"/>
+                                                <img src="/gotit/web/images/icons/ic-wallet.png" onclick="setItemType('wallet')" class="select-icon"/>
+                                                <img src="/gotit/web/images/icons/ic-watch.png" onclick="setItemType('watch')" class="select-icon"/>
+                                                <img src="/gotit/web/images/icons/ic-other.png" onclick="setItemType('other')" class="select-icon"/>
                                             </div>
                                         </div>
                                     </span>
@@ -86,9 +84,16 @@
                             </div>
                         </div>
                     </div>
+                    <input type="hidden" id="itemType" value="OTHER"/>
                     <hr>
                 </div>
-                <div id="mainListing"></div>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12" id="mainListing">
+
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="modal-footer">
 

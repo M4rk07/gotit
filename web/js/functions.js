@@ -3,7 +3,7 @@
 */
 $('#accTab a').click(function(e) {
     e.preventDefault();
-    $(this).tab('show')
+    $(this).tab('show');
 });
 
 function showLoginForm() {
@@ -51,7 +51,7 @@ function sendRequest(endpoint, method, data, callback) {
         }
     };
 
-    request.open(method, baseUrl + endpoint, true);
+    request.open(method, BASE_URL + endpoint, true);
     if(data!=null) {
         if(!(data instanceof FormData)) {
             request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
