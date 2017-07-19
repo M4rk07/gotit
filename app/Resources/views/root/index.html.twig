@@ -28,7 +28,7 @@
         </div>
         <div class="row">
             <div class="col-md-12">
-                <h4>Search</h4>
+                <h3>Filter</h3>
             </div>
         </div>
 
@@ -45,6 +45,11 @@
                 <img src="/gotit/web/images/icons/ic-wallet.png" onclick="enableDisableSearchIcon(this, 'wallet')" id="walletSearchIcon" class="select-search-icon"/>
                 <img src="/gotit/web/images/icons/ic-watch.png" onclick="enableDisableSearchIcon(this, 'watch')" id="watchSearchIcon" class="select-search-icon"/>
                 <img src="/gotit/web/images/icons/ic-other.png" onclick="enableDisableSearchIcon(this, 'other')" id="otherSearchIcon" class="select-search-icon"/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <button class="btn btn-outline-primary" onclick="search()">Go</button>
             </div>
         </div>
     </div>
@@ -202,9 +207,11 @@
     <script src="{{ asset('js/bootstrap.min.js') }}"></script>
     <script src="{{ asset('js/bootstrap-tab.js') }}"></script>
     <script src="{{ asset('js/map.js') }}"></script>
+    <script src="{{ asset('js/markerclusterer.js') }}"></script>
     <script src="{{ asset('js/functions.js') }}"></script>
     <script src="{{ asset('js/item-form.js') }}"></script>
     <script src="{{ asset('js/search-form.js') }}"></script>
+    <script src="{{ asset('js/markerclusterer.js') }}"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAqRzxX436gnjgKE5grpz70WM-A8YmmuxY&callback=initMap"></script>
 
     {% if is_granted('IS_AUTHENTICATED_FULLY') == false %}

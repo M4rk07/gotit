@@ -107,11 +107,11 @@ function saveItemData() {
         if (responseCode == 200) {
             var item = JSON.parse(data);
             pushItemToList(item);
-            if(item.marker.num_of_items == 1) {
-                removeCurrentMarker();
-                shownMarkers.push({marker: setNonEmptyMarker(item.marker.marker_id,
-                    item.marker.lat, item.marker.lng, {}, item.marker.type.type_id)});
-            }
+
+            marker.marker.setIcon(getMarkerIcon(item.marker.num_of_items > 1 ? "plus1" : item.marker.type));
+            marker.markerId = item.marker.marker_id;
+            marker.closable = false;
+            shownMarkers[marker.markerId] = marker.marker;
         }
     });
 }

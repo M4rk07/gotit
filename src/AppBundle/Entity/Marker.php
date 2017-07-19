@@ -8,7 +8,7 @@ use JMS\Serializer\Annotation as SRL;
 
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\MarkerRepository")
  * @ORM\Table(name="marker")
  * @SRL\XmlRoot("marker")
  */
@@ -51,9 +51,8 @@ class Marker
      */
     private $user;
     /**
-     * @ORM\ManyToOne(targetEntity="ItemType")
-     * @ORM\JoinColumn(name="type", referencedColumnName="type_id")
-     * @SRL\Type("AppBundle\Entity\ItemType")
+     * @ORM\Column(type="string")
+     * @SRL\Type("string")
      */
     private $type;
 
@@ -169,7 +168,7 @@ class Marker
     /**
      * @param mixed $type
      */
-    public function setType(\AppBundle\Entity\ItemType $type)
+    public function setType($type)
     {
         $this->type = $type;
         return $this;

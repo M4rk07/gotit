@@ -1,4 +1,8 @@
 var marker = {marker: null, markerId: null, closable: true};
+var markerCluster = null;
+var prevBounds = null;
+var currBounds = null;
+var currBiggestBounds = null;
 var map = null;
 var shownMarkers = [];
 // Constatnts
@@ -7,11 +11,6 @@ const BASE_IMG_URL = "http://localhost/gotit/web/images";
 const MAX_IMG_SIZE = 800;
 const DEFAULT_ITEM_TYPE = "empty";
 
-jQuery(document).ready(function($){
-    initMap();
-    getMarkers();
-});
-
 function initMap() {
     var uluru = {lat: 44.771111, lng: 20.514565};
 
@@ -19,6 +18,8 @@ function initMap() {
         zoom: 9,
         center: uluru
     });
+
+    markerCluster = new MarkerClusterer(map, [], {imagePath: BASE_IMG_URL + "/icons/markerclusterer/m"});
 
     // Try HTML5 geolocation.
     if (navigator.geolocation) {
@@ -47,38 +48,104 @@ function initMap() {
         openModal();
     });
 
+    google.maps.event.addListener(map, 'idle', function() {
+        setBounds(map.getBounds());
+    });
+
+}
+
+function setBounds(bounds) {
+    if(map.getZoom() < 12)
+        return;
+
+    if(currBounds == null) {
+        currBounds = bounds;
+        currBiggestBounds = bounds;
+        getMarkers();
+        return;
+    }
+
+    if(boundContains(currBiggestBounds, bounds))
+        return;
+
+    prevBounds = currBounds;
+    currBounds = bounds;
+    if(map.getZoom() == 12) {
+        currBiggestBounds = bounds;
+    }
+    getMarkers();
+}
+
+function boundContains (bigBounds, littleBounds) {
+    if(
+        bigBounds.getNorthEast().lat() > littleBounds.getNorthEast().lat() &&
+        bigBounds.getNorthEast().lng() > littleBounds.getNorthEast().lng() &&
+        bigBounds.getSouthWest().lat() < littleBounds.getSouthWest().lat() &&
+        bigBounds.getSouthWest().lng() < littleBounds.getSouthWest().lng()
+    ) return true;
+    return false;
+}
+
+function search() {
+    for (var key in shownMarkers) {
+        shownMarkers[key].setMap(null);
+    }
+    markerCluster.clearMarkers();
+    shownMarkers = [];
+    map.setCenter(currBiggestBounds.getCenter());
+    prevBounds = null;
+    currBounds = currBiggestBounds;
+    getMarkers();
 }
 
 function getMarkers() {
     var endpoint = '/markers';
 
-    sendRequest(endpoint, "GET", null, function(data, responseCode) {
+    var params = "?bounds=" + encodeURIComponent(JSON.stringify(
+        {"currBounds": currBounds.toJSON(), "prevBounds": prevBounds == null ? null : prevBounds.toJSON()}
+    ));
+
+    sendRequest(endpoint + params, "GET", null, function(data, responseCode) {
         if (responseCode == 200) {
             var markers = JSON.parse(data);
 
             Array.prototype.forEach.call(markers, function (markerElem) {
+
+                if(shownMarkers[markerElem.marker_id] != null)
+                    return;
 
                 var label = null;
                 if(markerElem.num_of_items > 1) {
                     label = {text:  String(markerElem.num_of_items), color: "white"};
                 }
 
-                shownMarkers.push({marker: setNonEmptyMarker(markerElem.marker_id,
-                    markerElem.lat, markerElem.lng, label, markerElem.type.type_id)});
+                setNonEmptyMarker(
+                    markerElem.marker_id,
+                    markerElem.lat,
+                    markerElem.lng,
+                    label,
+                    markerElem.num_of_items > 1 ? "plus1" : markerElem.type
+                );
             });
+
         }
     });
+
 }
 
 function setNonEmptyMarker(markerId, lat, lng, label, type) {
     var itemMarker = createMarker(lat, lng, label, type);
-    return itemMarker.addListener('click', function() {
+    itemMarker.addListener('click', function() {
         closeCurrentMarker();
         setCurrentMarker(itemMarker, markerId, false);
         getItems(markerId);
         openModal();
     });
 
+    shownMarkers[markerId] = itemMarker;
+    markerCluster.addMarker(itemMarker);
+
+    return itemMarker;
 }
 
 function createMarker(lat, lng, label, type) {
