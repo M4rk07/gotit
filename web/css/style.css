@@ -145,8 +145,17 @@ img[src$=".gif"], img[src$=".png"] {
 }
 
 .select-icon {
-    width: 29px;
+    width: 29px!important;
     height: auto;
     cursor: pointer;
+}
+
+.select-search-icon {
+    width: 20%!important;
+    height: auto;
+    cursor: pointer;
+    margin-bottom: 10px;
+    -webkit-filter: grayscale(100%); /* Safari 6.0 - 9.0 */
+    filter: grayscale(100%);
 }
 

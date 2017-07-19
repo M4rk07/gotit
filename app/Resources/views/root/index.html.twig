@@ -3,21 +3,51 @@
 {% block body %}
 
 <div id="sideBar" class="navbar navbar-fixed-left">
-    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-        <div class="dropdown">
-            <a class="displayName dropdown-toggle" data-toggle="dropdown">
-                {{ app.user.displayName }}
-            </a>
-            <div class="dropdown-menu userInfo">
-                Phone: <strong>{{ app.user.phoneNumber }}</strong>
-                <br>
-                Email: <strong>{{ app.user.username }}</strong>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+
+
+                                <div class="dropdown">
+                                    <a class="displayName dropdown-toggle" data-toggle="dropdown">
+                                        {{ app.user.displayName }}
+                                    </a>
+                                    <div class="dropdown-menu userInfo">
+                                        Phone: <strong>{{ app.user.phoneNumber }}</strong>
+                                        <br>
+                                        Email: <strong>{{ app.user.username }}</strong>
+                                    </div>
+                                </div>
+
+                {% else %}
+                    <a onclick="showRegistrationForm()">Register to pin!</a>
+                {% endif %}
+                <hr>
             </div>
         </div>
-    {% else %}
-        <a onclick="showRegistrationForm()">Register to pin!</a>
-    {% endif %}
-    <hr>
+        <div class="row">
+            <div class="col-md-12">
+                <h4>Search</h4>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <img src="/gotit/web/images/icons/ic-documents.png" onclick="enableDisableSearchIcon(this, 'documents')" id="documentsSearchIcon" class="select-search-icon"/>
+                <img src="/gotit/web/images/icons/ic-glasses.png" onclick="enableDisableSearchIcon(this, 'glasses')" id="glassesSearchIcon" class="select-search-icon"/>
+                <img src="/gotit/web/images/icons/ic-jewelry.png" onclick="enableDisableSearchIcon(this, 'jewelry')" id="jewelrySearchIcon" class="select-search-icon"/>
+                <img src="/gotit/web/images/icons/ic-keys.png" onclick="enableDisableSearchIcon(this, 'keys')" id="keysSearchIcon" class="select-search-icon"/>
+                <img src="/gotit/web/images/icons/ic-pet.png" onclick="enableDisableSearchIcon(this, 'pet')" id="documentsSearchIcon" class="select-search-icon"/>
+
+                <img src="/gotit/web/images/icons/ic-phone.png" onclick="enableDisableSearchIcon(this, 'phone')" id="phoneSearchIcon" class="select-search-icon"/>
+                <img src="/gotit/web/images/icons/ic-usb.png" onclick="enableDisableSearchIcon(this, 'usb')" id="usbSearchIcon" class="select-search-icon"/>
+                <img src="/gotit/web/images/icons/ic-wallet.png" onclick="enableDisableSearchIcon(this, 'wallet')" id="walletSearchIcon" class="select-search-icon"/>
+                <img src="/gotit/web/images/icons/ic-watch.png" onclick="enableDisableSearchIcon(this, 'watch')" id="watchSearchIcon" class="select-search-icon"/>
+                <img src="/gotit/web/images/icons/ic-other.png" onclick="enableDisableSearchIcon(this, 'other')" id="otherSearchIcon" class="select-search-icon"/>
+            </div>
+        </div>
+    </div>
 </div>
 
 {% if is_granted('IS_AUTHENTICATED_FULLY') %}
@@ -41,50 +71,62 @@
             </div>
             <div class="modal-body">
                 <div class="container">
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <div class="form-group">
-                                <div class='input-group'>
-                                    <input type="text" id="itemDescription" class="form-control" placeholder="What have you found here?">
+                    <div id="itemFormWrapper">
+                        <div class="row">
+                            <div class="col-sm-12">
 
-                                    <span class="input-group-addon">
-                                        <div class="dropdown">
-                                            <a class="dropdown-toggle" data-toggle="dropdown">
-                                                <img src="/gotit/web/images/icons/ic-other.png" id="dropdownIcon" class="select-icon" data-toggle="dropdown"/>
-                                            </a>
-                                            <div class="dropdown-menu dropdown-menu-right userInfo">
-                                                <img src="/gotit/web/images/icons/ic-documents.png" onclick="setItemType('documents')" class="select-icon"/>
-                                                <img src="/gotit/web/images/icons/ic-glasses.png" onclick="setItemType('glasses')" class="select-icon"/>
-                                                <img src="/gotit/web/images/icons/ic-jewelry.png" onclick="setItemType('jewelry')" class="select-icon"/>
-                                                <img src="/gotit/web/images/icons/ic-keys.png" onclick="setItemType('keys')" class="select-icon"/>
-                                                <img src="/gotit/web/images/icons/ic-pet.png" onclick="setItemType('pet')" class="select-icon"/>
+                                <div class="form-group">
+                                    <div class='input-group'>
+                                        <input type="text" id="itemDescription" class="form-control" placeholder="What have you found here?">
 
-                                                <img src="/gotit/web/images/icons/ic-phone.png" onclick="setItemType('phone')" class="select-icon"/>
-                                                <img src="/gotit/web/images/icons/ic-usb.png" onclick="setItemType('usb')" class="select-icon"/>
-                                                <img src="/gotit/web/images/icons/ic-wallet.png" onclick="setItemType('wallet')" class="select-icon"/>
-                                                <img src="/gotit/web/images/icons/ic-watch.png" onclick="setItemType('watch')" class="select-icon"/>
-                                                <img src="/gotit/web/images/icons/ic-other.png" onclick="setItemType('other')" class="select-icon"/>
+                                        <span class="input-group-addon">
+                                            <div class="dropdown">
+                                                <a class="dropdown-toggle" data-toggle="dropdown">
+                                                    <img src="/gotit/web/images/icons/ic-empty.png" id="dropdownIcon" class="select-icon" data-toggle="dropdown"/>
+                                                </a>
+                                                <div class="dropdown-menu dropdown-menu-right userInfo">
+                                                    <img src="/gotit/web/images/icons/ic-documents.png" onclick="setItemType('documents')" class="select-icon"/>
+                                                    <img src="/gotit/web/images/icons/ic-glasses.png" onclick="setItemType('glasses')" class="select-icon"/>
+                                                    <img src="/gotit/web/images/icons/ic-jewelry.png" onclick="setItemType('jewelry')" class="select-icon"/>
+                                                    <img src="/gotit/web/images/icons/ic-keys.png" onclick="setItemType('keys')" class="select-icon"/>
+                                                    <img src="/gotit/web/images/icons/ic-pet.png" onclick="setItemType('pet')" class="select-icon"/>
+
+                                                    <img src="/gotit/web/images/icons/ic-phone.png" onclick="setItemType('phone')" class="select-icon"/>
+                                                    <img src="/gotit/web/images/icons/ic-usb.png" onclick="setItemType('usb')" class="select-icon"/>
+                                                    <img src="/gotit/web/images/icons/ic-wallet.png" onclick="setItemType('wallet')" class="select-icon"/>
+                                                    <img src="/gotit/web/images/icons/ic-watch.png" onclick="setItemType('watch')" class="select-icon"/>
+                                                    <img src="/gotit/web/images/icons/ic-other.png" onclick="setItemType('other')" class="select-icon"/>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </span>
+                                        </span>
 
+                                    </div>
                                 </div>
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="col-md-9">
+                                <div class="form-group">
+                                    <input type="file" name="image" id="image" accept="image/jpeg, image/png" onchange="imageOptimization(this)" >
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group text-right" id="notifyBtnPlace">
+                                    <button type="button" class="btn btn-primary" id="notify" onclick="saveItemData()">Notify</button>
+                                </div>
+                            </div>
+                            <input type="hidden" id="itemType" value="OTHER"/>
+                        </div>
                     </div>
-                    <div class="row">
-                        <div class="col-md-9">
-                        <div class="form-group">
-                            <input type="file" name="image" id="image" accept="image/jpeg, image/png" onchange="imageOptimization(this)" >
-                        </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group text-right">
-                                <button type="button" class="btn btn-primary" id="notify" onclick="saveItemData()">Notify</button>
+                    {% if is_granted('IS_AUTHENTICATED_FULLY') == false %}
+
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <a href="{{ path('login') }}">Log In</a> to pin.
                             </div>
                         </div>
-                    </div>
-                    <input type="hidden" id="itemType" value="OTHER"/>
+
+                    {% endif %}
                     <hr>
                 </div>
                 <div class="container">
@@ -161,6 +203,13 @@
     <script src="{{ asset('js/bootstrap-tab.js') }}"></script>
     <script src="{{ asset('js/map.js') }}"></script>
     <script src="{{ asset('js/functions.js') }}"></script>
+    <script src="{{ asset('js/item-form.js') }}"></script>
+    <script src="{{ asset('js/search-form.js') }}"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAqRzxX436gnjgKE5grpz70WM-A8YmmuxY&callback=initMap"></script>
 
+    {% if is_granted('IS_AUTHENTICATED_FULLY') == false %}
+        <script>
+            hideItemForm();
+        </script>
+    {% endif %}
 {% endblock %}

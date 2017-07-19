@@ -1,6 +1,7 @@
 /**
  * Created by marko on 11.7.17..
 */
+
 $('#accTab a').click(function(e) {
     e.preventDefault();
     $(this).tab('show');
