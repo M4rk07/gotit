@@ -8,17 +8,18 @@
             <div class="col-md-12">
                 {% if is_granted('IS_AUTHENTICATED_FULLY') %}
 
-
-                                <div class="dropdown">
-                                    <a class="displayName dropdown-toggle" data-toggle="dropdown">
-                                        {{ app.user.displayName }}
-                                    </a>
-                                    <div class="dropdown-menu userInfo">
-                                        Phone: <strong>{{ app.user.phoneNumber }}</strong>
-                                        <br>
-                                        Email: <strong>{{ app.user.username }}</strong>
-                                    </div>
-                                </div>
+                    <div class="dropdown">
+                        <a class="displayName dropdown-toggle" data-toggle="dropdown">
+                            {{ app.user.firstName }} {{ app.user.lastName }}
+                        </a>
+                        <div class="dropdown-menu userInfo">
+                            {% if app.user.phoneNumber is not empty %}
+                                Phone: <strong>{{ app.user.phoneNumber }}</strong>
+                                <br>
+                            {% endif %}
+                            Email: <strong>{{ app.user.username }}</strong>
+                        </div>
+                    </div>
 
                 {% else %}
                     <a onclick="showRegistrationForm()">Register to pin!</a>
@@ -26,13 +27,13 @@
                 <hr>
             </div>
         </div>
-        <div class="row">
+        <div class="form-group row">
             <div class="col-md-12">
                 <h3>Tell us, what have you lost?</h3>
             </div>
         </div>
 
-        <div class="row">
+        <div class="form-group row">
             <div class="col-md-12">
                 <img src="/gotit/web/images/icons/ic-documents.png" onclick="enableDisableSearchIcon(this, 'documents')" id="documentsSearchIcon" class="select-search-icon"/>
                 <img src="/gotit/web/images/icons/ic-glasses.png" onclick="enableDisableSearchIcon(this, 'glasses')" id="glassesSearchIcon" class="select-search-icon"/>
@@ -55,7 +56,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="form-group">
-                    <input id="pac-input" class="form-control" type="text" placeholder="Place">
+                    <input id="pac-input" class="form-control" type="text" placeholder="City, street, place...">
                 </div>
             </div>
         </div>
@@ -162,38 +163,73 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <ul class="nav nav-tabs" id="accTab">
-                    <li class="active"><a href="#login" id="loginTab">Log In</a></li>
-                    <li><a href="#register" id="registrationTab">Register</a></li>
+                <ul class="nav nav-tabs" role="tablist" id="accTab">
+                    <li class="nav-item"><a class="nav-link active" data-toggle="tab" role="tab" href="#login">Log In</a></li>
+                    <li class="nav-item"><a class="nav-link" data-toggle="tab" role="tab" href="#register">Register</a></li>
                 </ul>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body">
-                <div class="container-fluid">
-                    <div class="tab-content">
-                        <div class="tab-pane active" id="login">
-                            <form action="{{ path('login') }}" method="post">
-                                <div class="form-group" id="loginForm">
-                                    <input type="email" class="form-control" name="_username" id="loginUsername" placeholder="Email">
-                                    <input type="password" class="form-control" name="_password" id="loginPassword" placeholder="Password">
-                                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
-                                    <button type="submit" class="btn btn-primary">Login</button>
-                                </div>
-                            </form>
+                <div class="container">
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="login" role="tabpanel">
+                                <form action="{{ path('login') }}" method="post">
+                                    <div class="form-group row">
+                                        <div class="col-sm-12">
+                                            <input type="email" class="form-control" name="_username" id="loginUsername" placeholder="Email">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-sm-12">
+                                            <input type="password" class="form-control" name="_password" id="loginPassword" placeholder="Password">
+                                        </div>
+                                    </div>
+                                        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                                    <div class="form-group row">
+                                        <div class="col-sm-12">
+                                            <button type="submit" class="btn btn-outline-primary form-btn">Login</button>
+                                        </div>
+                                    </div>
+
+                                </form>
+                            </div>
+                            <div class="tab-pane" id="register" role="tabpanel">
+                                <form action="{{ path('user_registration') }}" method="post">
+                                    <div class="form-group row">
+                                        <div class="col-sm-6">
+                                            <input type="text" class="form-control" name="firstName" id="regDisplayName" placeholder="First name" required>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <input type="text" class="form-control" name="lastName" id="regDisplayName" placeholder="Last name" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-sm-12">
+                                        <input type="email" class="form-control" name="email" id="regEmail" placeholder="Email" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-sm-6">
+                                            <input type="password" class="form-control" name="password" id="regPassword" placeholder="Password" required>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <input type="password" class="form-control" name="repeatedPassword" id="regRepeatedPassword" placeholder="Repeat password" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-sm-12">
+                                            <input type="text" class="form-control" name="phoneNumber" id="regPhoneNumber" placeholder="Phone number">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-sm-12">
+                                            <button type="submit" class="btn btn-outline-primary form-btn">Register</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
-                        <div class="tab-pane" id="register">
-                            <form action="{{ path('user_registration') }}" method="post">
-                                <div class="form-group" id="registrationForm">
-                                    <input type="text" class="form-control" name="displayName" id="regDisplayName" placeholder="*Display name">
-                                    <input type="email" class="form-control" name="email" id="regEmail" placeholder="*Email">
-                                    <input type="password" class="form-control" name="password" id="regPassword" placeholder="*Password">
-                                    <input type="password" class="form-control" name="repeatedPassword" id="regRepeatedPassword" placeholder="*Repeat password">
-                                    <input type="text" class="form-control" name="phoneNumber" id="regPhoneNumber" placeholder="Phone number">
-                                    <button type="submit" class="btn btn-primary">Register</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
+
                 </div>
             </div>
         </div>

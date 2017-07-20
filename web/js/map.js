@@ -225,7 +225,7 @@ function getItemWrapper(itemElem) {
     var username = document.createElement("a");
     username.setAttribute("class", "dropdown-toggle displayName");
     username.setAttribute("data-toggle", "dropdown");
-    username.textContent = itemElem.user.display_name;
+    username.textContent = "Contact";
 
     var infoWindow = document.createElement("div");
     infoWindow.setAttribute("class", "dropdown-menu userInfo");

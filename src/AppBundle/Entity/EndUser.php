@@ -47,7 +47,12 @@ class EndUser implements AdvancedUserInterface, \Serializable
      * @ORM\Column(type="string")
      * @SRL\Type("string")
      */
-    private $display_name;
+    private $first_name;
+    /**
+     * @ORM\Column(type="string")
+     * @SRL\Type("string")
+     */
+    private $last_name;
     /**
      * @Assert\NotBlank()
      * @Assert\Length(max=4096)
@@ -223,17 +228,34 @@ class EndUser implements AdvancedUserInterface, \Serializable
     /**
      * @return mixed
      */
-    public function getDisplayName()
+    public function getFirstName()
     {
-        return $this->display_name;
+        return $this->first_name;
     }
 
     /**
-     * @param mixed $display_name
+     * @param mixed $first_name
      */
-    public function setDisplayName($display_name)
+    public function setFirstName($first_name)
     {
-        $this->display_name = $display_name;
+        $this->first_name = $first_name;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLastName()
+    {
+        return $this->last_name;
+    }
+
+    /**
+     * @param mixed $last_name
+     */
+    public function setLastName($last_name)
+    {
+        $this->last_name = $last_name;
         return $this;
     }
 
