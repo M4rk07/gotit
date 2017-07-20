@@ -1,15 +1,15 @@
 var marker = {marker: null, markerId: null, closable: true};
 var markerCluster = null;
-var prevBounds = null;
-var currBounds = null;
-var currBiggestBounds = null;
 var map = null;
 var shownMarkers = [];
 // Constatnts
 const BASE_URL = "http://localhost/gotit/web/app_dev.php";
 const BASE_IMG_URL = "http://localhost/gotit/web/images";
+const BASE_ICON_URL = BASE_IMG_URL + "/icons";
 const MAX_IMG_SIZE = 800;
 const DEFAULT_ITEM_TYPE = "empty";
+
+
 
 function initMap() {
     var uluru = {lat: 44.771111, lng: 20.514565};
@@ -30,7 +30,7 @@ function initMap() {
             };
 
             map.setCenter(pos);
-            map.setZoom(12);
+            map.setZoom(11);
         }, function() {
             //handleLocationError(true, infoWindow, map.getCenter());
         });
@@ -48,71 +48,65 @@ function initMap() {
         openModal();
     });
 
-    google.maps.event.addListener(map, 'idle', function() {
-        setBounds(map.getBounds());
+    // Create the search box and link it to the UI element.
+    var input = document.getElementById('pac-input');
+    var searchBox = new google.maps.places.SearchBox(input);
+
+    // Listen for the event fired when the user selects a prediction and retrieve
+    // more details for that place.
+    searchBox.addListener('places_changed', function() {
+        var places = searchBox.getPlaces();
+
+        if (places.length == 0) {
+            return;
+        }
+
+        for(var i = 0; i<shownMarkers.length; i++) {
+            shownMarkers[i].marker.setMap(null);
+            markerCluster.removeMarker(shownMarkers[i].marker);
+        }
+        shownMarkers = [];
+
+        // For each place, get the icon, name and location.
+        var bounds = new google.maps.LatLngBounds();
+        places.forEach(function(place) {
+            if (!place.geometry) {
+                console.log("Returned place contains no geometry");
+                return;
+            }
+
+            if (place.geometry.viewport) {
+                // Only geocodes have viewport.
+                bounds.union(place.geometry.viewport);
+            } else {
+                bounds.extend(place.geometry.location);
+            }
+
+        });
+        map.fitBounds(bounds);
+
+        searchBounds = map.getBounds();
+        getMarkers();
     });
 
-}
-
-function setBounds(bounds) {
-    if(map.getZoom() < 12)
-        return;
-
-    if(currBounds == null) {
-        currBounds = bounds;
-        currBiggestBounds = bounds;
-        getMarkers();
-        return;
-    }
-
-    if(boundContains(currBiggestBounds, bounds))
-        return;
-
-    prevBounds = currBounds;
-    currBounds = bounds;
-    if(map.getZoom() == 12) {
-        currBiggestBounds = bounds;
-    }
-    getMarkers();
-}
-
-function boundContains (bigBounds, littleBounds) {
-    if(
-        bigBounds.getNorthEast().lat() > littleBounds.getNorthEast().lat() &&
-        bigBounds.getNorthEast().lng() > littleBounds.getNorthEast().lng() &&
-        bigBounds.getSouthWest().lat() < littleBounds.getSouthWest().lat() &&
-        bigBounds.getSouthWest().lng() < littleBounds.getSouthWest().lng()
-    ) return true;
-    return false;
-}
-
-function search() {
-    for (var key in shownMarkers) {
-        shownMarkers[key].setMap(null);
-    }
-    markerCluster.clearMarkers();
-    shownMarkers = [];
-    map.setCenter(currBiggestBounds.getCenter());
-    prevBounds = null;
-    currBounds = currBiggestBounds;
-    getMarkers();
 }
 
 function getMarkers() {
     var endpoint = '/markers';
 
-    var params = "?bounds=" + encodeURIComponent(JSON.stringify(
-        {"currBounds": currBounds.toJSON(), "prevBounds": prevBounds == null ? null : prevBounds.toJSON()}
-    ));
+    var params = "?bounds="+encodeURIComponent(JSON.stringify(searchBounds.toJSON()));
+    if(searchType != null) {
+        params += "&searchType=" + searchType;
+    }
+    if(withOthers != false) {
+        params += "&withOthers=" + withOthers;
+    }
 
     sendRequest(endpoint + params, "GET", null, function(data, responseCode) {
         if (responseCode == 200) {
             var markers = JSON.parse(data);
 
             Array.prototype.forEach.call(markers, function (markerElem) {
-
-                if(shownMarkers[markerElem.marker_id] != null)
-                    return;
 
                 var label = null;
                 if(markerElem.num_of_items > 1) {
@@ -131,6 +125,7 @@ function getMarkers() {
         }
     });
 
+
 }
 
 function setNonEmptyMarker(markerId, lat, lng, label, type) {
@@ -142,7 +137,7 @@ function setNonEmptyMarker(markerId, lat, lng, label, type) {
         openModal();
     });
 
-    shownMarkers[markerId] = itemMarker;
+    shownMarkers.push({marker: itemMarker, markerId: markerId, type: type});
     markerCluster.addMarker(itemMarker);
 
     return itemMarker;

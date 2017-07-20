@@ -11,6 +11,10 @@ h4 {
     font-size: 15px!important;
 }
 
+h3 {
+    font-size: 17px!important;
+}
+
 a {
     color: #025aa5!important;
     cursor: pointer;
@@ -62,16 +66,16 @@ hr {
 }
 
 ::-webkit-input-placeholder { /* Chrome/Opera/Safari */
-    font-size: 12px
+    font-size: 14px
 }
 ::-moz-placeholder { /* Firefox 19+ */
-    font-size: 12px
+    font-size: 14px
 }
 :-ms-input-placeholder { /* IE 10+ */
-    font-size: 12px
+    font-size: 14px
 }
 :-moz-placeholder { /* Firefox 18- */
-    font-size: 12px
+    font-size: 14px
 }
 
 .modal-footer {

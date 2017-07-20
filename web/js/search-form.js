@@ -1,6 +1,7 @@
 var lastElement = null;
 var searchType = null;
 var withOthers = false;
+var searchBounds = null;
 
 function enableDisableSearchIcon (element, type) {
     if(element.style.getPropertyValue("filter") != "none") {

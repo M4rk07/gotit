@@ -111,7 +111,7 @@ function saveItemData() {
             marker.marker.setIcon(getMarkerIcon(item.marker.num_of_items > 1 ? "plus1" : item.marker.type));
             marker.markerId = item.marker.marker_id;
             marker.closable = false;
-            shownMarkers[marker.markerId] = marker.marker;
+            shownMarkers.push({marker: marker.marker, markerId: marker.markerId, type: item.marker.type});
         }
     });
 }

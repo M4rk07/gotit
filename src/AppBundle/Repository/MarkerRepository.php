@@ -26,29 +26,6 @@ class MarkerRepository extends EntityRepository
             ->getResult();
     }
 
-    public function findByBoundsWithPrev(Bounds $currBounds, Bounds $prevBounds, $searchTypes = null)
-    {
-        $baseQuery = 'SELECT m FROM AppBundle:Marker m WHERE
-                ((m.lat BETWEEN :currSouth AND :currNorth) AND (m.lat NOT BETWEEN :prevSouth AND :prevNorth) AND (m.lng BETWEEN :currWest AND :currEast))
-                OR 
-                ((m.lng BETWEEN :currWest AND :currEast) AND (m.lng NOT BETWEEN :prevWest AND :prevEast) AND (m.lat BETWEEN :currSouth AND :currNorth))'
-            . $this->getSearchClause($searchTypes);
-
-        return $this->getEntityManager()
-            ->createQuery(
-                $baseQuery
-            )
-            ->setParameter("currSouth", $currBounds->getSouth())
-            ->setParameter("currNorth", $currBounds->getNorth())
-            ->setParameter("currWest", $currBounds->getWest())
-            ->setParameter("currEast", $currBounds->getEast())
-            ->setParameter("prevSouth", $prevBounds->getSouth())
-            ->setParameter("prevNorth", $prevBounds->getNorth())
-            ->setParameter("prevWest", $prevBounds->getWest())
-            ->setParameter("prevEast", $prevBounds->getEast())
-            ->getResult();
-    }
-
     public function getSearchClause ($searchTypes) {
         $searchClause = "";
         if(!empty($searchTypes)) {

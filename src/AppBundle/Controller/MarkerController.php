@@ -151,40 +151,30 @@ class MarkerController extends Controller
      * @Method({"GET"})
      */
     public function getMarkers(Request $request) {
-        $bounds = json_decode($request->get("bounds"));
+        $reqBounds = json_decode($request->get("bounds"));
         $searchType = $request->get("searchType");
         $withOthers = $request->get("withOthers");
 
         $searchTypes = array();
         if(!empty($searchType)) {
             $searchTypes[] = $searchType;
-        }
+                   }
         if(!empty($withOthers))
             $searchTypes[] = "other";
 
-        $currBounds = new Bounds();
+        $bounds = new Bounds();
+        $bounds->setSouth($reqBounds->south)
+            ->setWest($reqBounds->west)
+            ->setNorth($reqBounds->north)
+            ->setEast($reqBounds->east);
 
-        $currBounds->setSouth($bounds->currBounds->south)
-            ->setWest($bounds->currBounds->west)
-            ->setNorth($bounds->currBounds->north)
-            ->setEast($bounds->currBounds->east);
+        $markers = $this->getDoctrine()->getManager()->getRepository('AppBundle:Marker')
+                           ->findByBounds($bounds, $searchTypes);
 
-        if(!empty($bounds->prevBounds)) {
-            $prevBounds = new Bounds();
-
-            $prevBounds->setSouth($bounds->prevBounds->south)
-                ->setWest($bounds->prevBounds->west)
-                ->setNorth($bounds->prevBounds->north)
-                ->setEast($bounds->prevBounds->east);
-
-            $markers = $this->getDoctrine()->getManager()->getRepository('AppBundle:Marker')
-                ->findByBoundsWithPrev($currBounds, $prevBounds, $searchTypes);
-        } else
-            $markers = $this->getDoctrine()->getManager()->getRepository('AppBundle:Marker')
-                ->findByBounds($currBounds, $searchTypes);
 
         $serializer = SerializerBuilder::create()->build();
-        $jsonContent = $serializer->serialize($markers, 'json', SerializationContext::create()->setGroups(array('Default')));
+        $jsonContent = $serializer->serialize($markers, 'json', SerializationContext::create()
+            ->setGroups(array('Default')));
 
         return new Response($jsonContent, 200, array("Content-Type" => "application/json"));
     }
