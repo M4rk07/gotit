@@ -5,13 +5,13 @@
     <div class="container">
         <div class="form-signin">
 
-            <ul class="nav nav-tabs" id="accTab">
-                <li class="active"><a href="#login" id="loginTab">Log In</a></li>
-                <li><a href="#register" id="registrationTab">Register</a></li>
+            <ul class="nav nav-tabs" role="tablist" id="accTab">
+                <li class="nav-item"><a class="nav-link active" data-toggle="tab" role="tab" href="#login">Log In</a></li>
+                <li class="nav-item"><a class="nav-link" data-toggle="tab" role="tab" href="#register">Register</a></li>
             </ul>
 
             <div class="tab-content">
-                <div class="tab-pane active" id="login">
+                <div class="tab-pane active" id="login" role="tabpanel">
 
                     <form action="{{ path('login') }}" method="post">
                         <div class="form-group row">
@@ -45,7 +45,7 @@
                     </form>
 
                 </div>
-                <div class="tab-pane" id="register">
+                <div class="tab-pane" id="register" role="tabpanel">
                     <form action="{{ path('user_registration') }}" method="post">
                         <div class="form-group row">
                             <div class="col-sm-6">
@@ -84,26 +84,5 @@
 
         </div>
     </div> <!-- /container -->
-
-{% endblock %}
-
-{% block stylesheets %}
-<link rel="stylesheet" type="text/css" href="{{ asset('css/style.css') }}">
-<link rel="stylesheet" type="text/css" href="{{ asset('css/bootstrap.min.css') }}">
-{% endblock %}
-
-{% block javascripts %}
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<script src="{{ asset('js/bootstrap.min.js') }}"></script>
-<script src="{{ asset('js/bootstrap-tab.js') }}"></script>
-<script src="{{ asset('js/map.js') }}"></script>
-<script src="{{ asset('js/functions.js') }}"></script>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBXoPTmKkgeHh0YNI1Ra7X9ueVVN-h7SyI&callback=initMap"></script>
-
-{% if login is defined and login == 1 %}
-<script>
-    showLoginForm();
-</script>
-{% endif %}
 
 {% endblock %}

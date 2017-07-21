@@ -223,7 +223,7 @@ function getItemWrapper(itemElem) {
     dropdown.setAttribute("class", "dropdown");
 
     var username = document.createElement("a");
-    username.setAttribute("class", "dropdown-toggle displayName");
+    username.setAttribute("class", "dropdown-toggle custom-link");
     username.setAttribute("data-toggle", "dropdown");
     username.textContent = "Contact";
 

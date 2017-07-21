@@ -38,14 +38,16 @@ class RegistrationController extends Controller
         $username = $request->request->get("email");
         $plainPassword = $request->request->get("password");
         $phoneNumber = $request->request->get("phoneNumber");
-        $displayName = $request->request->get("displayName");
+        $firstName = $request->request->get("firstName");
+        $lastName = $request->request->get("lastName");
 
         $user = new EndUser();
         // 3) Encode the password (you could also do this via Doctrine listener)
         $user->setPlainPassword($plainPassword)
             ->setPhoneNumber($phoneNumber)
             ->setUsername($username)
-            ->setDisplayName($displayName);
+            ->setFirstName($firstName)
+            ->setLastName($lastName);
 
         $validator = $this->get('validator');
 
