@@ -7,6 +7,11 @@ $('#accTab a').click(function(e) {
     $(this).tab('show');
 });
 
+$('#boardTab a').click(function(e) {
+    e.preventDefault();
+    $(this).tab('show');
+});
+
 function showLoginForm() {
     $('#loginTab').tab('show');
     $("#loginModal").modal('show');
