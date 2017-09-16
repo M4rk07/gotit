@@ -175,3 +175,8 @@ img[src$=".gif"], img[src$=".png"] {
 .standard-spacing {
     padding: 3px;
 }
+
+.app-title {
+    font-size: 18px;
+    color: #CC7832;
+}

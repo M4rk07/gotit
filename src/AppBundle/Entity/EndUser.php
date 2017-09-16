@@ -80,6 +80,32 @@ class EndUser implements AdvancedUserInterface, \Serializable
      * @SRL\Groups({"users_and_items"})
      */
     private $items;
+    /**
+     * @ORM\Column(type="datetime")
+     * @SRL\Type("DateTime")
+     */
+    private $date_time;
+
+    public function __construct() {
+        $this->date_time = new \DateTime();
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDateTime()
+    {
+        return $this->date_time;
+    }
+
+    /**
+     * @param mixed $date_time
+     */
+    public function setDateTime($date_time)
+    {
+        $this->date_time = $date_time;
+        return $this;
+    }
 
     public function getRoles()
     {

@@ -55,10 +55,16 @@ class Marker
      * @SRL\Type("string")
      */
     private $type;
+    /**
+     * @ORM\Column(type="datetime")
+     * @SRL\Type("DateTime")
+     */
+    private $date_time;
 
     public function __construct() {
         $this->items = new ArrayCollection();
-        $this->type = new ItemType("OTHER");
+        $this->type = new ItemType("other");
+        $this->date_time = new \DateTime();
     }
 
     /**
@@ -171,6 +177,23 @@ class Marker
     public function setType($type)
     {
         $this->type = $type;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDateTime()
+    {
+        return $this->date_time;
+    }
+
+    /**
+     * @param mixed $date_time
+     */
+    public function setDateTime($date_time)
+    {
+        $this->date_time = $date_time;
         return $this;
     }
 
