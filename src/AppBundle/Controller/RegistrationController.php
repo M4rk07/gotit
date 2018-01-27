@@ -8,9 +8,11 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Activity;
 use AppBundle\Entity\EndUser;
 use AppBundle\Entity\Item;
 use AppBundle\Entity\Marker;
+use AppBundle\Entity\Statistics;
 use JMS\Serializer\SerializerBuilder;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -62,6 +64,26 @@ class RegistrationController extends Controller
         // 4) save the User!
         $em = $this->getDoctrine()->getManager();
         $em->persist($user);
+
+        $statistics = $em->getRepository('AppBundle:Statistics')->find('MAIN');
+        $statistics->incNumOfUsers();
+
+        $todayDate = date("d.m.Y");
+        $statisticsToday = $em->getRepository('AppBundle:Statistics')->find($todayDate);
+        if(empty($statisticsToday)) {
+            $statisticsToday = new Statistics();
+            $statisticsToday->setStatisticsId($todayDate);
+            $statisticsToday->incNumOfUsers();
+            $em->persist($statisticsToday);
+        } else
+            $statisticsToday->incNumOfUsers();
+
+
+        $activity = new Activity();
+        $activity->setUser($user)
+            ->setActivityType("REGISTRATION");
+
+        $em->persist($activity);
         $em->flush();
 
         // ... do any other work - like sending them an email, etc

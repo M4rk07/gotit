@@ -46,7 +46,7 @@ doctrine:
         port: '%database_port%'
         dbname: '%database_name%'
         user: '%database_user%'
-        password: '%env(DB_PASSWORD)%'
+        password: '%database_password%'
         charset: UTF8
         # if using pdo_sqlite as your database driver:
         #   1. add the path in parameters.yml
@@ -59,6 +59,9 @@ doctrine:
         auto_generate_proxy_classes: '%kernel.debug%'
         naming_strategy: doctrine.orm.naming_strategy.underscore
         auto_mapping: true
+        dql:
+            datetime_functions:
+                str_to_date: DoctrineExtensions\Query\Mysql\StrToDate
 
 # Swiftmailer Configuration
 swiftmailer:
@@ -67,3 +70,4 @@ swiftmailer:
     username: '%mailer_user%'
     password: '%mailer_password%'
     spool: { type: memory }
+

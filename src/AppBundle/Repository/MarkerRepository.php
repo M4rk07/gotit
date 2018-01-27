@@ -12,7 +12,8 @@ class MarkerRepository extends EntityRepository
         $baseQuery = 'SELECT m FROM AppBundle:Marker m WHERE
                 ((m.lat BETWEEN :currSouth AND :currNorth)
                 AND 
-                (m.lng BETWEEN :currWest AND :currEast))'
+                (m.lng BETWEEN :currWest AND :currEast))
+                AND m.num_of_items > 0'
             . $this->getSearchClause($searchTypes);
 
         return $this->getEntityManager()

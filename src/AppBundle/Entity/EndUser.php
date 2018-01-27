@@ -81,10 +81,27 @@ class EndUser implements AdvancedUserInterface, \Serializable
      */
     private $items;
     /**
+     * @ORM\OneToMany(targetEntity="Report", mappedBy="user", cascade={"persist", "remove"})
+     * @SRL\Type("ArrayCollection<AppBundle\Entity\Report>")
+     * @SRL\Groups({"users_and_reports"})
+     */
+    private $reports;
+    /**
+     * @ORM\OneToMany(targetEntity="Activity", mappedBy="user", cascade={"persist", "remove"})
+     * @SRL\Type("ArrayCollection<AppBundle\Entity\Activity>")
+     * @SRL\Groups({"users_and_activities"})
+     */
+    private $activities;
+    /**
      * @ORM\Column(type="datetime")
      * @SRL\Type("DateTime")
      */
     private $date_time;
+    /**
+     * @ORM\Column(type="string")
+     * @SRL\Type("string")
+     */
+    private $role = 'ROLE_USER';
 
     public function __construct() {
         $this->date_time = new \DateTime();
@@ -107,9 +124,26 @@ class EndUser implements AdvancedUserInterface, \Serializable
         return $this;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getRole()
+    {
+        return $this->role;
+    }
+
+    /**
+     * @param mixed $role
+     */
+    public function setRole($role)
+    {
+        $this->role = $role;
+        return $this;
+    }
+
     public function getRoles()
     {
-        return array('ROLE_USER');
+        return array($this->getRole());
     }
 
     public function getPassword()
@@ -181,6 +215,39 @@ class EndUser implements AdvancedUserInterface, \Serializable
     {
         $this->phone_number = $phone_number;
         return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getReports()
+    {
+        return $this->reports;
+    }
+
+    /**
+     * @param mixed $reports
+     */
+    public function setReports($reports)
+    {
+        $this->reports = $reports;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getActivities()
+    {
+        return $this->activities;
+    }
+
+    /**
+     * @param mixed $activities
+     */
+    public function setActivities($activities)
+    {
+        $this->activities = $activities;
     }
 
     /**

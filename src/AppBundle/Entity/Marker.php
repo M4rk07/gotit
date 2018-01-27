@@ -39,7 +39,7 @@ class Marker
      */
     private $num_of_items = 1;
     /**
-     * @ORM\OneToMany(targetEntity="Item", mappedBy="marker", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="Item", mappedBy="marker", cascade={"persist"})
      * @SRL\Type("ArrayCollection<AppBundle\Entity\Item>")
      * @SRL\Groups({"markers_and_items"})
      */
@@ -149,6 +149,20 @@ class Marker
     public function incNumOfItems()
     {
         $this->num_of_items += 1;
+
+        return $this;
+    }
+
+    /**
+     * Set numOfItems
+     *
+     * @param integer $numOfItems
+     *
+     * @return Marker
+     */
+    public function decNumOfItems()
+    {
+        $this->num_of_items -= 1;
 
         return $this;
     }

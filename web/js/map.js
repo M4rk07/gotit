@@ -2,12 +2,6 @@ var marker = {marker: null, markerId: null, closable: true};
 var markerCluster = null;
 var map = null;
 var shownMarkers = [];
-// Constatnts
-const BASE_URL = "http://localhost/gotit/web/app_dev.php";
-const BASE_IMG_URL = "http://localhost/gotit/web/images";
-const BASE_ICON_URL = BASE_IMG_URL + "/icons";
-const MAX_IMG_SIZE = 800;
-const DEFAULT_ITEM_TYPE = "empty";
 
 
 
@@ -219,6 +213,14 @@ function getItemWrapper(itemElem) {
     description.setAttribute("class", "itemDescription");
     description.innerHTML = itemElem.description;
 
+    var row1col2row1 = document.createElement("div");
+    row1col2row1.setAttribute("class", "row");
+
+    var row1col2row1col1 = document.createElement("div");
+    row1col2row1col1.setAttribute("class", "col-md-6");
+    var row1col2row1col2 = document.createElement("div");
+    row1col2row1col2.setAttribute("class", "col-md-6 text-right");
+
     var dropdown = document.createElement("div");
     dropdown.setAttribute("class", "dropdown");
 
@@ -235,10 +237,20 @@ function getItemWrapper(itemElem) {
     else
         infoWindow.innerHTML = 'No contact information.';
 
+    var report = document.createElement("a");
+    report.setAttribute("class", "btn btn-outline-danger btn-sm");
+    report.setAttribute("href", reportPageURL+"?itemId="+itemElem.item_id);
+    report.textContent = "Report";
+
+    row1col2row1col1.appendChild(dropdown);
+    row1col2row1col2.appendChild(report);
+    row1col2row1.appendChild(row1col2row1col1);
+    row1col2row1.appendChild(row1col2row1col2);
+
     dropdown.appendChild(username);
     dropdown.appendChild(infoWindow);
     row1col2wrapper.appendChild(description);
-    row1col2wrapper.appendChild(dropdown);
+    row1col2wrapper.appendChild(row1col2row1);
 
     row1col1.appendChild(icon);
     row1col2.appendChild(row1col2wrapper);

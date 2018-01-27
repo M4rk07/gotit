@@ -85,8 +85,8 @@
                     </div>
 
 
-                    {% for item in app.user.items %}
-                        <div class="list-group">
+                    {% for item in active_items %}
+                        <div class="list-group" id="list-item-{{ item.itemId }}">
                             <div class="row">
                                 <div class="col-md-2">
                                     <img src="/gotit/web/images/icons/ic-{{ item.type.typeId }}.png" class="listingIcon"/>
@@ -100,6 +100,11 @@
                             {% if item.imageUrl is not empty %}
                                 <img src="/gotit/web/images/{{ item.imageUrl }}" class="itemImage"/>
                             {% endif %}
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <button class="btn btn-outline-primary btn-delete-main" onclick="deleteItem('{{ item.itemId }}')">delete</button>
+                                </div>
+                            </div>
                             <hr>
                         </div>
                     {% endfor %}
@@ -287,6 +292,10 @@
         </div>
     </div>
 </div>
+
+    <script>
+        var reportPageURL = "{{ path('report_page') }}";
+    </script>
 
 {% endblock %}
 

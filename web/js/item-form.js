@@ -103,6 +103,8 @@ function saveItemData() {
     if(itemFormData.imageBlob != null)
         formData.append("image", imageBlob);
 
+
+
     sendRequest(endpoint, "POST", formData, function(data, responseCode) {
         if (responseCode == 200) {
             var item = JSON.parse(data);
@@ -114,4 +116,15 @@ function saveItemData() {
             shownMarkers.push({marker: marker.marker, markerId: marker.markerId, type: item.marker.type});
         }
     });
+}
+
+function deleteItem(itemId) {
+    var endpoint = '/items/'+itemId;
+
+    sendRequest(endpoint, "DELETE", null, function(data, responseCode) {
+        if (responseCode == 200) {
+            $('#list-item-'+itemId).remove();
+        }
+    });
+
 }

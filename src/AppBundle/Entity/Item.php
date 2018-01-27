@@ -14,7 +14,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use JMS\Serializer\Annotation as SRL;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\ItemRepository")
  * @ORM\Table(name="item")
  * @SRL\XmlRoot("item")
  */
@@ -29,7 +29,7 @@ class Item
     private $item_id;
     /**
      * @ORM\ManyToOne(targetEntity="Marker", inversedBy="items")
-     * @ORM\JoinColumn(name="marker_id", referencedColumnName="marker_id")
+     * @ORM\JoinColumn(name="marker_id", referencedColumnName="marker_id", onDelete="SET NULL")
      * @SRL\Type("AppBundle\Entity\Marker")
      * @SRL\Groups({"items_and_markers"})
      */
@@ -71,18 +71,34 @@ class Item
      * @SRL\Type("DateTime")
      */
     private $date_time;
+    /**
+     * @ORM\Column(type="integer")
+     * @SRL\Type("integer")
+     */
+    private $deleted;
+    /**
+     * @ORM\OneToMany(targetEntity="Report", mappedBy="item", cascade={"persist", "remove"})
+     * @SRL\Type("ArrayCollection<AppBundle\Entity\Report>")
+     */
+    private $reports;
+    /**
+     * @ORM\OneToOne(targetEntity="ItemHistory", mappedBy="item")
+     * @SRL\Type("AppBundle\Entity\ItemHistory")
+     */
+    private $history;
 
     public function __construct()
     {
         $this->type = new ItemType("other");
         $this->date_time = new \DateTime();
+        $this->deleted = 0;
     }
 
     /**
-     * Get itemId
-     *
-     * @return integer
-     */
+ * Get itemId
+ *
+ * @return integer
+ */
     public function getItemId()
     {
         return $this->item_id;
@@ -130,6 +146,23 @@ class Item
     }
 
     /**
+     * @return mixed
+     */
+    public function getDeleted()
+    {
+        return $this->deleted;
+    }
+
+    /**
+     * @param mixed $deleted
+     */
+    public function setDeleted($deleted)
+    {
+        $this->deleted = $deleted;
+        return $this;
+    }
+
+    /**
      * Set imageUrl
      *
      * @param string $imageUrl
@@ -151,6 +184,23 @@ class Item
     public function getImageUrl()
     {
         return $this->image_url;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getReports()
+    {
+        return $this->reports;
+    }
+
+    /**
+     * @param mixed $reports
+     */
+    public function setReports($reports)
+    {
+        $this->reports = $reports;
+        return $this;
     }
 
     /**
@@ -219,6 +269,23 @@ class Item
 
     public function getImage() {
         return $this->image;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getHistory()
+    {
+        return $this->history;
+    }
+
+    /**
+     * @param mixed $history
+     */
+    public function setHistory($history)
+    {
+        $this->history = $history;
+        return $this;
     }
 
     public function saveImage() {

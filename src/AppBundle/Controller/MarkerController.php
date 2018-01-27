@@ -8,10 +8,14 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Activity;
 use AppBundle\Entity\EndUser;
 use AppBundle\Entity\Item;
+use AppBundle\Entity\ItemHistory;
 use AppBundle\Entity\ItemType;
 use AppBundle\Entity\Marker;
+use AppBundle\Entity\Report;
+use AppBundle\Entity\Statistics;
 use AppBundle\Map\Bounds;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerBuilder;
@@ -34,6 +38,8 @@ class MarkerController extends Controller
     /**
      * @Route("/items", name="items")
      * @Method({"POST", "GET"})
+     *
+     * REST ROUTE
      */
     public function itemsAction(Request $request) {
 
@@ -45,8 +51,6 @@ class MarkerController extends Controller
     }
 
     public function insertItem(Request $request) {
-
-        $this->denyAccessUnlessGranted('ROLE_USER', null, 'Unable to access this page!');
 
         $lat = $request->request->get("lat");
         $lng = $request->request->get("lng");
@@ -122,6 +126,26 @@ class MarkerController extends Controller
             throw $e;
         }
 
+        $statistics = $em->getRepository('AppBundle:Statistics')->find('MAIN');
+        $statistics->incNumOfItems();
+
+        $todayDate = date("d.m.Y");
+        $statisticsToday = $em->getRepository('AppBundle:Statistics')->find($todayDate);
+        if(empty($statisticsToday)) {
+            $statisticsToday = new Statistics();
+            $statisticsToday->setStatisticsId($todayDate);
+            $statisticsToday->incNumOfItems();
+            $em->persist($statisticsToday);
+        } else
+            $statisticsToday->incNumOfItems();
+
+        $activity = new Activity();
+        $activity->setUser($user)
+            ->setActivityType("ITEM_CREATION");
+        $em->persist($activity);
+
+        $em->flush();
+
         $serializer = SerializerBuilder::create()->build();
         $jsonContent = $serializer->serialize($item, 'json',
             SerializationContext::create()->setGroups(array('Default', 'items_and_markers')));
@@ -147,8 +171,103 @@ class MarkerController extends Controller
     }
 
     /**
+     * @Route("/items/{itemId}", name="items_delete")
+     * @Method({"DELETE"})
+     *
+     * REST ROUTE
+     */
+    function deleteItem ($itemId) {
+        $em = $this->getDoctrine()->getManager();
+
+        $item = $em->getRepository('AppBundle:Item')->findOneBy(
+            array('item_id' => $itemId)
+        );
+
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+
+        if($item->getUser()->getUserId() != $user->getUserId())
+            throw new Exception();
+
+        $item->setDeleted(1);
+        $em->flush();
+
+        $marker = $em->getRepository('AppBundle:Marker')->find($item->getMarker()->getMarkerId());
+
+        $itemHistory = new ItemHistory();
+        $itemHistory->setItem($item)
+            ->setLat($marker->getLat())
+            ->setLng($marker->getLng())
+            ->setReason("DONE");
+
+        $em->persist($itemHistory);
+        $em->flush();
+
+        $marker->decNumOfItems();
+
+        if($marker->getNumOfItems() == 0) {
+            $em->remove($marker);
+        }
+
+        $statistics = $em->getRepository('AppBundle:Statistics')->find('MAIN');
+        $statistics->incNumOfFound();
+
+        $todayDate = date("d.m.Y");
+        $statisticsToday = $em->getRepository('AppBundle:Statistics')->find($todayDate);
+        if(empty($statisticsToday)) {
+            $statisticsToday = new Statistics();
+            $statisticsToday->setStatisticsId($todayDate);
+            $statisticsToday->incNumOfFound();
+            $em->persist($statisticsToday);
+        } else
+            $statisticsToday->incNumOfFound();
+
+        $activity = new Activity();
+        $activity->setUser($user)
+            ->setActivityType("ITEM_DELETION");
+        $em->persist($activity);
+
+        $em->flush();
+
+        return new Response(null, 200, array("Content-Type" => "application/json"));
+    }
+
+    /**
+     * @Route("/items/reports/{itemId}", name="items_report")
+     * @Method({"POST"})
+     *
+     * REST ROUTE
+     */
+    public function reportItem($itemId, Request $request) {
+        $description = $request->request->get("description");
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+
+        $em = $this->getDoctrine()->getManager();
+
+        $item = $em->getRepository('AppBundle:Item')->find($itemId);
+
+        $report = new Report();
+        $report->setUser($user)
+            ->setItem($item)
+            ->setDescription($description);
+
+        $em->persist($report);
+
+        $activity = new Activity();
+        $activity->setUser($user)
+            ->setActivityType("USER_REPORT");
+        $em->persist($activity);
+
+        $em->persist($activity);
+        $em->flush();
+
+        return new Response(null, 200, array("Content-Type" => "application/json"));
+    }
+
+    /**
      * @Route("/markers", name="markers")
      * @Method({"GET"})
+     *
+     * REST ROUTE
      */
     public function getMarkers(Request $request) {
         $reqBounds = json_decode($request->get("bounds"));

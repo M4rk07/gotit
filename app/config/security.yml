@@ -25,6 +25,7 @@ security:
                 check_path: login
                 require_previous_session: false
                 csrf_token_generator: security.csrf.token_manager
+                success_handler: app.security.login_listener
             logout:
                 path:   /logout
                 target: /
@@ -35,3 +36,9 @@ security:
 
             # https://symfony.com/doc/current/security/form_login_setup.html
             #form_login: ~
+    role_hierarchy:
+            ROLE_ADMIN: ROLE_USER
+    access_control:
+            - { path: ^/admin, roles: ROLE_ADMIN }
+            - { path: ^/pg-report, roles: ROLE_USER }
+            - { path: ^/items, roles: ROLE_USER, methods: [POST,DELETE] }

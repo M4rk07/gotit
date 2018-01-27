@@ -180,3 +180,9 @@ img[src$=".gif"], img[src$=".png"] {
     font-size: 18px;
     color: #CC7832;
 }
+
+.btn-delete-main {
+    width: 100%;
+    padding: 2px!important;
+    margin-top: 8px!important;
+}

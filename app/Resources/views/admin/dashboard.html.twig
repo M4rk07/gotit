@@ -1,0 +1,170 @@
+{% extends 'admin/base-admin.html.twig' %}
+
+{% block body %}
+
+        <div id="page-wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">Dashboard</h1>
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+            <div class="row">
+                <div class="col-lg-3 col-md-6">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <i class="fa fa-user fa-5x"></i>
+                                </div>
+                                <div class="col-xs-9 text-right">
+                                    <div class="huge">{{ statistics.numOfUsers }}</div>
+                                    <div>Users</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="panel panel-yellow">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <i class="fa fa-map-marker fa-5x"></i>
+                                </div>
+                                <div class="col-xs-9 text-right">
+                                    <div class="huge">{{ statistics.numOfItems }}</div>
+                                    <div>Items</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="panel panel-green">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <i class="fa fa-thumbs-up fa-5x"></i>
+                                </div>
+                                <div class="col-xs-9 text-right">
+                                    <div class="huge">{{ statistics.numOfFound }}</div>
+                                    <div>Found items</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="panel panel-red">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <i class="fa fa-ban fa-5x"></i>
+                                </div>
+                                <div class="col-xs-9 text-right">
+                                    <div class="huge">{{ statistics.numOfBanned }}</div>
+                                    <div>Banned users</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /.row -->
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <i class="fa fa-bar-chart-o fa-fw"></i> Past 30 days
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+                            <div id="morris-statistics-chart"></div>
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+
+                </div>
+                <!-- /.col-lg-8 -->
+                <div class="col-lg-4">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <i class="fa fa-bell fa-fw"></i> Latest Activities
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+                            <div class="list-group">
+                                {% for activity in activities %}
+                                    <a href="#" class="list-group-item">
+                                        {% if activity.activityType == "ITEM_CREATION" %}
+                                            <i class="fa fa-plus-circle fa-fw"></i>
+                                        {% elseif activity.activityType == "ITEM_DELETION" %}
+                                            <i class="fa fa-minus-circle fa-fw"></i>
+                                        {% elseif activity.activityType == "REGISTRATION" %}
+                                            <i class="fa fa-user-plus fa-fw"></i>
+                                        {% elseif activity.activityType == "USER_REPORT" %}
+                                            <i class="fa fa-files-o fa-fw"></i>
+                                        {% endif %}
+                                        {{ activity.activityMessage }}
+                                    <span class="pull-right text-muted small"><em>{{ activity.timeCreated|date('d.m | h:i') }}</em>
+                                    </span>
+                                    </a>
+                                {% endfor %}
+
+                            </div>
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+                    <!-- /.panel .chat-panel -->
+                </div>
+                <!-- /.col-lg-4 -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /#page-wrapper -->
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+
+        var endpoint = '/admin/statistics';
+
+        $(document).ready(function() {
+
+            sendRequest(endpoint, "GET", null, function (data, responseCode) {
+                if (responseCode == 200) {
+                    data = JSON.parse(data);
+                    var pattern = /(\d{2})\.(\d{2})\.(\d{4})/;
+
+                    var chartData = [];
+                    for (var i = 0; i < data.length; i++) {
+                        chartData.push({
+                            period: data[i].statistics_id,
+                            num_of_users: data[i].num_of_users,
+                            num_of_items: data[i].num_of_items,
+                            num_of_found: data[i].num_of_found
+                        });
+                    }
+
+                     Morris.Line({
+                         element: 'morris-statistics-chart',
+                         data: chartData,
+                         xkey: 'period',
+                         ykeys: ['num_of_users', 'num_of_items', 'num_of_found'],
+                         labels: ['Users', 'Items', 'Found items'],
+                         pointSize: 2,
+                         hideHover: 'auto',
+                         resize: true,
+                         parseTime: false
+                     });
+
+                }
+            });
+        });
+
+    </script>
+{% endblock %}
