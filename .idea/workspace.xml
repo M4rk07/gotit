@@ -2,15 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="2b9fc497-33b3-4c3e-a786-4452ae530820" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/AppBundle/EventSubscriber/ApiSubscriber.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/web/sb-admin/vendor/datatables-editable/jquery.dataTables.editable.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/web/sb-admin/vendor/datatables-editable/jquery.jeditable.mini.js" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/AppBundle/EventSubscriber/ApiExceptionSubscriber.php" afterPath="" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/db/gotit_db.sql" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Resources/views/admin/base-admin.html.twig" afterPath="$PROJECT_DIR$/app/Resources/views/admin/base-admin.html.twig" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Resources/views/admin/users.html.twig" afterPath="$PROJECT_DIR$/app/Resources/views/admin/users.html.twig" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/AppBundle/Controller/AdminController.php" afterPath="$PROJECT_DIR$/src/AppBundle/Controller/AdminController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/AppBundle/Entity/EndUser.php" afterPath="$PROJECT_DIR$/src/AppBundle/Entity/EndUser.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/AppBundle/Controller/MarkerController.php" afterPath="$PROJECT_DIR$/src/AppBundle/Controller/MarkerController.php" />
     </list>
     <ignored path="gotits.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -114,8 +109,6 @@
         <option value="$PROJECT_DIR$/src/AppBundle/Map/Bounds.php" />
         <option value="$PROJECT_DIR$/web/js/ajax.js" />
         <option value="$PROJECT_DIR$/web/js/item-form.js" />
-        <option value="$PROJECT_DIR$/web/js/map.js" />
-        <option value="$PROJECT_DIR$/web/js/map.js" />
         <option value="$PROJECT_DIR$/web/js/report.js" />
         <option value="$PROJECT_DIR$/src/AppBundle/Controller/LoginController.php" />
         <option value="$PROJECT_DIR$/app/Resources/views/root/index.html.twig" />
@@ -124,13 +117,15 @@
         <option value="$PROJECT_DIR$/src/AppBundle/Controller/RegistrationController.php" />
         <option value="$PROJECT_DIR$/src/AppBundle/Controller/RegistrationController.php" />
         <option value="$PROJECT_DIR$/src/AppBundle/EventSubscriber/ApiExceptionSubscriber.php" />
-        <option value="$PROJECT_DIR$/src/AppBundle/Controller/MarkerController.php" />
-        <option value="$PROJECT_DIR$/src/AppBundle/Controller/MarkerController.php" />
         <option value="$PROJECT_DIR$/src/AppBundle/EventSubscriber/ApiSubscriber.php" />
         <option value="$PROJECT_DIR$/app/Resources/views/admin/base-admin.html.twig" />
         <option value="$PROJECT_DIR$/src/AppBundle/Entity/EndUser.php" />
         <option value="$PROJECT_DIR$/src/AppBundle/Entity/EndUser.php" />
         <option value="$PROJECT_DIR$/app/Resources/views/admin/users.html.twig" />
+        <option value="$PROJECT_DIR$/src/AppBundle/Controller/MarkerController.php" />
+        <option value="$PROJECT_DIR$/src/AppBundle/Controller/MarkerController.php" />
+        <option value="$PROJECT_DIR$/web/js/map.js" />
+        <option value="$PROJECT_DIR$/web/js/map.js" />
         <option value="$PROJECT_DIR$/src/AppBundle/Controller/AdminController.php" />
       </list>
     </option>
@@ -195,68 +190,6 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="gotit" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="gotit" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="app" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="gotit" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="gotit" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="app" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Resources" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="views" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="gotit" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="gotit" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="app" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Resources" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="views" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="admin" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
         </subPane>
       </pane>
     </panes>
@@ -271,6 +204,7 @@
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\wamp64\www\gotit\db" />
       <recent name="$PROJECT_DIR$/web/images/icons/markerclusterer" />
       <recent name="$PROJECT_DIR$/web/images/icons" />
       <recent name="$PROJECT_DIR$/web/images/icons/m" />
@@ -344,7 +278,7 @@
     <option name="totallyTimeSpent" value="204032000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1696" height="1026" extended-state="6" />
+    <frame x="-8" y="-8" width="1696" height="1026" extended-state="7" />
     <editor active="false" />
     <layout>
       <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.20357142" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -387,13 +321,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$USER_HOME$/Documents/FON/ITEH/DOMACI/Domaci ITEH1/iteh1/Configuration.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/Resources/views/admin/dashboard.html.twig">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-9.153846">
@@ -584,14 +511,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/web/js/map.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.3325359">
-          <caret line="96" column="15" selection-start-line="96" selection-start-column="4" selection-end-line="96" selection-end-column="15" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/web/js/item-form.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.3325359">
@@ -709,7 +628,7 @@
         <state vertical-scroll-proportion="0.57449347">
           <caret line="43" column="40" selection-start-line="43" selection-start-column="40" selection-end-line="43" selection-end-column="40" />
           <folding>
-            <element signature="e#128#165#0#PHP" expanded="true" />
+            <element signature="e#128#165#0#PHP" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -754,14 +673,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/AppBundle/Controller/MarkerController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.45768774">
-          <caret line="304" column="8" selection-start-line="304" selection-start-column="8" selection-end-line="306" selection-end-column="67" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/AppBundle/Entity/EndUser.php">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.50655544">
@@ -770,21 +681,45 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/AppBundle/Controller/AdminController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="3.6674612">
-          <caret line="186" column="9" selection-start-line="186" selection-start-column="9" selection-end-line="186" selection-end-column="9" />
-          <folding>
-            <element signature="e#125#162#0#PHP" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/Resources/views/admin/users.html.twig">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.2431466">
           <caret line="12" column="29" selection-start-line="12" selection-start-column="29" selection-end-line="12" selection-end-column="29" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/web/js/map.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.53588516">
+          <caret line="129" column="20" selection-start-line="129" selection-start-column="20" selection-end-line="129" selection-end-column="20" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/AppBundle/Controller/MarkerController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-14.461538">
+          <caret line="214" column="8" selection-start-line="214" selection-start-column="8" selection-end-line="225" selection-end-column="46" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/db/gotit_db.sql">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/AppBundle/Controller/AdminController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.5852205">
+          <caret line="125" column="44" selection-start-line="125" selection-start-column="44" selection-end-line="125" selection-end-column="44" />
+          <folding>
+            <element signature="e#125#157#0#PHP" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

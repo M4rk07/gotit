@@ -9,6 +9,7 @@
 namespace AppBundle\Controller;
 
 
+use AppBundle\Entity\Statistics;
 use AppBundle\Exception\ApiException;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerBuilder;
@@ -110,6 +111,19 @@ class AdminController extends Controller
 
         if(!empty($reportId))
             $this->solveReportAction($reportId, $request);
+
+        $statistics = $em->getRepository('AppBundle:Statistics')->find('MAIN');
+        $statistics->incNumOfBanned();
+
+        $todayDate = date("d.m.Y");
+        $statisticsToday = $em->getRepository('AppBundle:Statistics')->find($todayDate);
+        if(empty($statisticsToday)) {
+            $statisticsToday = new Statistics();
+            $statisticsToday->setStatisticsId($todayDate);
+            $statisticsToday->incNumOfBanned();
+            $em->persist($statisticsToday);
+        } else
+            $statisticsToday->incNumOfBanned();
 
         $em->flush();
 

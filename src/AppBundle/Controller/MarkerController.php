@@ -115,6 +115,8 @@ class MarkerController extends Controller
         // Generate a unique name for the file before saving it
         $item->saveImage();
 
+
+
         $statistics = $em->getRepository('AppBundle:Statistics')->find('MAIN');
         $statistics->incNumOfItems();
 
@@ -289,7 +291,7 @@ class MarkerController extends Controller
 
         $validator = $this->get('validator');
 
-        if(empty($reqBounds) || (empty($searchType && empty($withOthers))))
+        if(empty($reqBounds) || (empty($searchType) && empty($withOthers)))
             throw new ApiException(400, 'Invalid request.');
 
         $bounds = new Bounds();
