@@ -50,73 +50,70 @@ class MarkerController extends Controller
         $image = $request->files->get("image");
         $itemType = $request->request->get("type");
 
+        if(empty($lat) || empty($lng) || empty($description) || empty($itemType))
+            throw new ApiException(400, 'Invalid request.');
+
         $em = $this->getDoctrine()->getManager();
         $validator = $this->get('validator');
 
-        $em->getConnection()->beginTransaction();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+        // Create Marker object
+        $marker = new Marker();
+        $marker->setLat(number_format($lat, 6))
+            ->setLng(number_format($lng, 6));
 
-        try {
-            $user = $this->get('security.token_storage')->getToken()->getUser();
-            // Create Marker object
-            $marker = new Marker();
-            $marker->setLat(number_format($lat, 6))
-                ->setLng(number_format($lng, 6));
+        // Create Item object
+        $item = new Item();
+        $item->setDescription($description)
+            ->setImage($image);
 
-            // Create Item object
-            $item = new Item();
-            $item->setDescription($description)
-                ->setImage($image);
+        $itemType = $em->getRepository('AppBundle:ItemType')->find($itemType);
+        if(empty($itemType))
+            throw new ApiException(400, 'Invalid request');
 
-            $itemType = $em->getRepository('AppBundle:ItemType')->find($itemType);
+        $item->setType($itemType);
+        $marker->setType($itemType->getTypeId());
 
-            $item->setType($itemType);
-            $marker->setType($itemType->getTypeId());
+        // Set their relations
+        $item->setMarker($marker);
+        $marker->addItem($item);
+        $marker->setUser($user);
+        $item->setUser($user);
 
-            // Set their relations
-            $item->setMarker($marker);
-            $marker->addItem($item);
-            $marker->setUser($user);
-            $item->setUser($user);
-
-            // Validate properties
-            $mErrors = $validator->validate($marker);
-            $iErrors = $validator->validate($item);
-            if(count($mErrors) > 0 || count($iErrors) > 0){
-                throw new \Exception();
-            }
-
-            $markerDuplicate = $em
-                ->getRepository('AppBundle:Marker')
-                ->findOneBy(array('lat' => $marker->getLat(), 'lng' => $marker->getLng()));
-
-            if(!empty($markerDuplicate)) {
-                $markerDuplicate->incNumOfItems();
-                $currTypes = explode(',', $markerDuplicate->getType());
-                if(empty($currTypes))
-                    $currTypes = array($markerDuplicate->getType());
-                if(!in_array($itemType->getTypeId(), $currTypes)) {
-                    $currTypes[] = $itemType->getTypeId();
-                    $currTypes = implode(',', $currTypes);
-                    $markerDuplicate->setType($currTypes);
-                }
-                $em->merge($markerDuplicate);
-
-                $item->setMarker($markerDuplicate);
-                $em->persist($item);
-            }
-            else
-                $em->persist($marker);
-
-            // Generate a unique name for the file before saving it
-            $item->saveImage();
-
-            $em->flush();
-            $em->getConnection()->commit();
+        // Validate properties
+        $mErrors = $validator->validate($marker);
+        $iErrors = $validator->validate($item);
+        if(count($mErrors) > 0){
+            throw new ApiException(400, $mErrors[0]->getMessage());
         }
-        catch (\Exception $e) {
-            $em->getConnection()->rollBack();
-            throw $e;
+        if(count($iErrors) > 0){
+            throw new ApiException(400, $iErrors[0]->getMessage());
         }
+
+        $markerDuplicate = $em
+            ->getRepository('AppBundle:Marker')
+            ->findOneBy(array('lat' => $marker->getLat(), 'lng' => $marker->getLng()));
+
+        if(!empty($markerDuplicate)) {
+            $markerDuplicate->incNumOfItems();
+            $currTypes = explode(',', $markerDuplicate->getType());
+            if(empty($currTypes))
+                $currTypes = array($markerDuplicate->getType());
+            if(!in_array($itemType->getTypeId(), $currTypes)) {
+                $currTypes[] = $itemType->getTypeId();
+                $currTypes = implode(',', $currTypes);
+                $markerDuplicate->setType($currTypes);
+            }
+            $em->merge($markerDuplicate);
+
+            $item->setMarker($markerDuplicate);
+            $em->persist($item);
+        }
+        else
+            $em->persist($marker);
+
+        // Generate a unique name for the file before saving it
+        $item->saveImage();
 
         $statistics = $em->getRepository('AppBundle:Statistics')->find('MAIN');
         $statistics->incNumOfItems();
@@ -155,7 +152,13 @@ class MarkerController extends Controller
         $markerId = $request->get('markerId');
         $em = $this->getDoctrine()->getManager();
 
+        if(empty($markerId))
+            throw new ApiException(400, 'Invalid request.');
+
         $marker = $em->getRepository('AppBundle:Marker')->find($markerId);
+
+        if(empty($marker))
+            throw new ApiException(400, 'Invalid request');
 
         $items = $em->getRepository('AppBundle:Item')->findBy(
             array('marker' => $marker)
@@ -181,13 +184,15 @@ class MarkerController extends Controller
             array('item_id' => $itemId)
         );
 
+        if(empty($item))
+            throw new ApiException(400, 'Invalid request.');
+
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
         if($item->getUser()->getUserId() != $user->getUserId())
-            throw new Exception();
+            throw new ApiException(403, 'Action denied.');
 
         $item->setDeleted(1);
-        $em->flush();
 
         $marker = $em->getRepository('AppBundle:Marker')->find($item->getMarker()->getMarkerId());
 
@@ -198,7 +203,6 @@ class MarkerController extends Controller
             ->setReason("DONE");
 
         $em->persist($itemHistory);
-        $em->flush();
 
         $marker->decNumOfItems();
 
@@ -240,22 +244,33 @@ class MarkerController extends Controller
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
         $em = $this->getDoctrine()->getManager();
+        $validator = $this->get('validator');
 
         $item = $em->getRepository('AppBundle:Item')->find($itemId);
+
+        if(empty($item))
+            throw new ApiException(400, 'Invalid request.');
+
+        if($item->getUser()->getUserId() == $user->getUserId())
+            throw new ApiException(403, "Can't report your own post.");
 
         $report = new Report();
         $report->setUser($user)
             ->setItem($item)
             ->setDescription($description);
 
+        $rErrors = $validator->validate($report);
+        if(count($rErrors) > 0)
+            throw new ApiException(400, $rErrors[0]->getMessage());
+
         $em->persist($report);
 
         $activity = new Activity();
         $activity->setUser($user)
             ->setActivityType("USER_REPORT");
-        $em->persist($activity);
 
         $em->persist($activity);
+
         $em->flush();
 
         return new Response(null, 200, array("Content-Type" => "application/json"));
@@ -272,21 +287,32 @@ class MarkerController extends Controller
         $searchType = $request->get("searchType");
         $withOthers = $request->get("withOthers");
 
-        if(empty($reqBounds))
-            throw new ApiException(400, 'Bounds required.');
+        $validator = $this->get('validator');
 
-        $searchTypes = array();
-        if(!empty($searchType)) {
-            $searchTypes[] = $searchType;
-                   }
-        if(!empty($withOthers))
-            $searchTypes[] = "other";
+        if(empty($reqBounds) || (empty($searchType && empty($withOthers))))
+            throw new ApiException(400, 'Invalid request.');
 
         $bounds = new Bounds();
-        $bounds->setSouth($reqBounds->south)
-            ->setWest($reqBounds->west)
-            ->setNorth($reqBounds->north)
-            ->setEast($reqBounds->east);
+        try {
+            $bounds->setSouth($reqBounds->south)
+                ->setWest($reqBounds->west)
+                ->setNorth($reqBounds->north)
+                ->setEast($reqBounds->east);
+        } catch (\Exception $e) {
+            throw new ApiException(400, 'Invalid request.');
+        }
+
+        $vErrors = $validator->validate($bounds);
+        if(count($vErrors) > 0)
+            throw new ApiException(400, $vErrors[0]->getMessage());
+
+        $searchTypes = array();
+
+        if(!empty($searchType))
+            $searchTypes[] = $searchType;
+
+        if(!empty($withOthers))
+            $searchTypes[] = "other";
 
         $markers = $this->getDoctrine()->getManager()->getRepository('AppBundle:Marker')
                            ->findByBounds($bounds, $searchTypes);

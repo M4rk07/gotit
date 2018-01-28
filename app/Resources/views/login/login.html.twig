@@ -6,12 +6,12 @@
         <div class="form-signin">
 
             <ul class="nav nav-tabs" role="tablist" id="accTab">
-                <li class="nav-item"><a class="nav-link active" data-toggle="tab" role="tab" href="#login">Log In</a></li>
-                <li class="nav-item"><a class="nav-link" data-toggle="tab" role="tab" href="#register">Register</a></li>
+                <li class="nav-item"><a class="nav-link {% if (activeTab is defined and activeTab == 'login') or activeTab is not defined %}active{% endif %}" data-toggle="tab" role="tab" href="#login">Log In</a></li>
+                <li class="nav-item"><a class="nav-link {% if activeTab is defined and activeTab == 'registration' %}active{% endif %}" data-toggle="tab" role="tab" href="#register">Register</a></li>
             </ul>
 
             <div class="tab-content">
-                <div class="tab-pane active" id="login" role="tabpanel">
+                <div class="tab-pane {% if (activeTab is defined and activeTab == 'login') or activeTab is not defined %}active{% endif %}" id="login" role="tabpanel">
 
                     <form action="{{ path('login') }}" method="post">
                         <div class="form-group row">
@@ -34,18 +34,20 @@
                             </div>
                         </div>
                         <div id="loginFormMessage">
+                        {% if (activeTab is defined and activeTab == 'login') or activeTab is not defined %}
                             {% if error_message is defined and error_message != null %}
                                 <div class="alert-danger">{{ error_message }}</div>
                             {% endif %}
                             {% if success_message is defined and success_message != null %}
                                 <div class="alert-success">{{ success_message }}</div>
                             {% endif %}
+                        {% endif %}
                         </div>
 
                     </form>
 
                 </div>
-                <div class="tab-pane" id="register" role="tabpanel">
+                <div class="tab-pane {% if activeTab is defined and activeTab == 'registration' %}active{% endif %}" id="register" role="tabpanel">
                     <form action="{{ path('user_registration') }}" method="post">
                         <div class="form-group row">
                             <div class="col-sm-6">
@@ -77,6 +79,16 @@
                             <div class="col-sm-12">
                                 <button type="submit" class="btn btn-outline-primary form-btn">Register</button>
                             </div>
+                        </div>
+                        <div id="registrationFormMessage">
+                            {% if activeTab is defined and activeTab == 'registration' %}
+                                {% if error_message is defined and error_message != null %}
+                                    <div class="alert-danger">{{ error_message }}</div>
+                                {% endif %}
+                                {% if success_message is defined and success_message != null %}
+                                    <div class="alert-success">{{ success_message }}</div>
+                                {% endif %}
+                            {% endif %}
                         </div>
                     </form>
                 </div>

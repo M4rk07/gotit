@@ -95,6 +95,8 @@ function saveItemData() {
     var endpoint = '/items';
     var itemFormData = getItemFormData();
 
+    $('#itemListMessageBox').html('');
+
     var formData = new FormData();
     formData.append("description", itemFormData.description);
     formData.append("lat", itemFormData.lat);
@@ -117,6 +119,8 @@ function saveItemData() {
             marker.closable = false;
             shownMarkers.push({marker: marker.marker, markerId: marker.markerId, type: item.marker.type});
         }
+        else
+            handleErrorResponse(data,'#itemListMessageBox');
     });
 }
 
@@ -127,6 +131,8 @@ function deleteItem(itemId) {
         if (responseCode == 200) {
             $('#list-item-'+itemId).remove();
         }
+        else
+            handleErrorResponse(data,null);
     });
 
 }

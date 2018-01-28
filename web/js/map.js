@@ -3,8 +3,6 @@ var markerCluster = null;
 var map = null;
 var shownMarkers = [];
 
-
-
 function initMap() {
     var uluru = {lat: 44.771111, lng: 20.514565};
 
@@ -93,7 +91,7 @@ function getMarkers() {
         params += "&searchType=" + searchType;
     }
     if(withOthers != false) {
-        params += "&withOthers=" + withOthers;
+       params += "&withOthers=" + withOthers;
     }
 
     sendRequest(endpoint + params, "GET", null, function(data, responseCode) {
@@ -116,7 +114,8 @@ function getMarkers() {
                 );
             });
 
-        }
+        } else
+            handleErrorResponse(data,null);
     });
 
 
@@ -158,11 +157,15 @@ function setCurrentMarker(newMarker, markerId, closable) {
 }
 
 function openModal() {
+    $("#itemListMessageBox").html('');
     $("#mainModal").modal('show');
 }
 
 function getItems(markerId) {
     var endpoint = '/items?markerId=' + markerId;
+
+    $('#itemListMessageBox').html('');
+
     sendRequest(endpoint, "GET", null, function(data, responseCode) {
         if (responseCode == 200) {
             data = JSON.parse(data);
@@ -174,7 +177,8 @@ function getItems(markerId) {
                 itemsWord = "item";
 
             document.getElementById("numOfItems").innerText = data.length + " " + itemsWord;
-        }
+        } else
+            handleErrorResponse(data,'#itemListMessageBox');
     });
 }
 

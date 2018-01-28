@@ -36,7 +36,6 @@ class LoginController extends Controller
         // last username entered by the user
         $lastUsername = $authUtils->getLastUsername();
 
-        // replace this example code with whatever you need
         return $this->render('login/login.html.twig', [
             'base_dir' => realpath($this->getParameter('kernel.project_dir')).DIRECTORY_SEPARATOR,
             'error_message' => $error!=null ? $error->getMessageKey() : null,

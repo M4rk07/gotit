@@ -39,6 +39,7 @@ class RegistrationController extends Controller
     {
         $username = $request->request->get("email");
         $plainPassword = $request->request->get("password");
+        $plainRepeatedPassword = $request->request->get("repeatedPassword");
         $phoneNumber = $request->request->get("phoneNumber");
         $firstName = $request->request->get("firstName");
         $lastName = $request->request->get("lastName");
@@ -56,13 +57,34 @@ class RegistrationController extends Controller
         // Validate properties
         $euErrors = $validator->validate($user);
         if(count($euErrors) > 0) {
-            throw new \Exception();
+            return $this->render('login/login.html.twig', [
+                'base_dir' => realpath($this->getParameter('kernel.project_dir')).DIRECTORY_SEPARATOR,
+                'activeTab' => "registration",
+                'error_message' => $euErrors[0]->getMessage()
+            ]);
         }
+
+        if($plainPassword != $plainRepeatedPassword)
+            return $this->render('login/login.html.twig', [
+                'base_dir' => realpath($this->getParameter('kernel.project_dir')).DIRECTORY_SEPARATOR,
+                'activeTab' => "registration",
+                'error_message' => "Passwords don't match."
+            ]);
+
+        $em = $this->getDoctrine()->getManager();
+        $existUser = $em->getRepository('AppBundle:EndUser')->findOneBy(array('username' => $username));
+
+        if(!empty($existUser))
+            return $this->render('login/login.html.twig', [
+                'base_dir' => realpath($this->getParameter('kernel.project_dir')).DIRECTORY_SEPARATOR,
+                'activeTab' => "registration",
+                'error_message' => "User with that email already exists."
+            ]);
+
         $password = $passwordEncoder->encodePassword($user, $plainPassword);
         $user->setPassword($password);
 
         // 4) save the User!
-        $em = $this->getDoctrine()->getManager();
         $em->persist($user);
 
         $statistics = $em->getRepository('AppBundle:Statistics')->find('MAIN');
@@ -86,13 +108,8 @@ class RegistrationController extends Controller
         $em->persist($activity);
         $em->flush();
 
-        // ... do any other work - like sending them an email, etc
-        // maybe set a "flash" success message for the user
-
-        // replace this example code with whatever you need
-        return $this->render('root/index.html.twig', [
+        return $this->render('login/login.html.twig', [
             'base_dir' => realpath($this->getParameter('kernel.project_dir')).DIRECTORY_SEPARATOR,
-            'login' => true,
             'last_username' => $username,
             'success_message' => "Thank you for registration! You can log in now."
         ]);

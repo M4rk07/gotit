@@ -46,22 +46,26 @@ class EndUser implements AdvancedUserInterface, \Serializable
     /**
      * @ORM\Column(type="string")
      * @SRL\Type("string")
+     * @Assert\Length(min=3, minMessage="First name should be minimum 3 characters long.")
      */
     private $first_name;
     /**
      * @ORM\Column(type="string")
      * @SRL\Type("string")
+     * @Assert\Length(min=3, minMessage="Last name should be minimum 3 characters long.")
      */
     private $last_name;
     /**
      * @Assert\NotBlank()
-     * @Assert\Length(max=4096)
+     * @Assert\Length(min=5, max=30, minMessage="Password should be minimum 5 characters long.", maxMessage="Password should be maximum 30 characters long.")
      * @SRL\Exclude
      */
     private $plainPassword;
     /**
      * @ORM\Column(type="string")
      * @SRL\Type("string")
+     * @Assert\Type(type="numeric", message="Phone number is not valid.")
+     * @Assert\Length(min=7, max=13, minMessage="Phone number is not valid.", maxMessage="Phone number is not valid.")
      */
     private $phone_number;
     /**

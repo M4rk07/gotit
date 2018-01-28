@@ -6,11 +6,42 @@ namespace AppBundle\Map;
  * Date: 19.7.17.
  * Time: 16.27
  */
+
+use Symfony\Component\Validator\Constraints as Assert;
+
 class Bounds
 {
+    /**
+     * @Assert\NotBlank()
+     * @Assert\Type(
+     *     type="double",
+     *     message="The value {{ value }} is not a valid {{ type }}."
+     * )
+     */
     private $south;
+    /**
+     * @Assert\NotBlank()
+     * @Assert\Type(
+     *     type="double",
+     *     message="The value {{ value }} is not a valid {{ type }}."
+     * )
+     */
     private $west;
+    /**
+     * @Assert\NotBlank()
+     * @Assert\Type(
+     *     type="double",
+     *     message="The value {{ value }} is not a valid {{ type }}."
+     * )
+     */
     private $north;
+    /**
+     * @Assert\NotBlank()
+     * @Assert\Type(
+     *     type="double",
+     *     message="The value {{ value }} is not a valid {{ type }}."
+     * )
+     */
     private $east;
 
     /**

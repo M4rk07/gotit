@@ -15,7 +15,9 @@ function saveReport(itemId) {
             messagePlace.html('<div class="alert alert-success"><strong>Success!</strong> Thank you for helping our community. You will now be redirected to homepage.</div>');
             setTimeout(function () {
                 window.location.href = homepage;
-            }, 5000);
+            }, 4000);
         }
+        else
+            handleErrorResponse(data,'#message');
     });
 }

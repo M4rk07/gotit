@@ -28,3 +28,23 @@ function sendRequest(endpoint, method, data, callback) {
     else
         request.send();
 }
+
+function handleErrorResponse (responseText, messageBox)  {
+
+    var message = 'Error.';
+
+    try {
+        var data = JSON.parse(responseText);
+
+        if('error_message' in data)
+            message = data.error_message;
+
+        if(messageBox != null)
+            $(messageBox).html('<div class="alert alert-danger">'+message+'</div>');
+        else
+            throw false;
+
+    } catch (e) {
+        alert(message);
+    }
+}
