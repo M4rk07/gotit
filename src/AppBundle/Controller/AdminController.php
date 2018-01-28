@@ -28,7 +28,7 @@ class AdminController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $statistics = $em->getRepository('AppBundle:Statistics')->find("MAIN");
-        $activities = $em->getRepository('AppBundle:Activity')->findBy(array(),null,10);
+        $activities = $em->getRepository('AppBundle:Activity')->findBy(array(),array('activity_id' => "DESC"),10);
         $parameters = [
             'base_dir' => realpath($this->getParameter('kernel.project_dir')).DIRECTORY_SEPARATOR,
             'statistics' => $statistics,

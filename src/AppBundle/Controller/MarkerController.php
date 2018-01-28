@@ -16,6 +16,7 @@ use AppBundle\Entity\ItemType;
 use AppBundle\Entity\Marker;
 use AppBundle\Entity\Report;
 use AppBundle\Entity\Statistics;
+use AppBundle\Exception\ApiException;
 use AppBundle\Map\Bounds;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerBuilder;
@@ -36,20 +37,11 @@ class MarkerController extends Controller
 {
 
     /**
-     * @Route("/items", name="items")
-     * @Method({"POST", "GET"})
+     * @Route("/items", name="items_insert")
+     * @Method({"POST"})
      *
      * REST ROUTE
      */
-    public function itemsAction(Request $request) {
-
-        if($request->getMethod() == "POST")
-            return $this->insertItem($request);
-        else if($request->getMethod() == "GET")
-            return $this->getItems($request);
-
-    }
-
     public function insertItem(Request $request) {
 
         $lat = $request->request->get("lat");
@@ -153,6 +145,12 @@ class MarkerController extends Controller
         return new Response($jsonContent, 200, array("Content-Type" => "application/json"));
     }
 
+    /**
+     * @Route("/items", name="items_get")
+     * @Method({"GET"})
+     *
+     * REST ROUTE
+     */
     function getItems(Request $request) {
         $markerId = $request->get('markerId');
         $em = $this->getDoctrine()->getManager();
@@ -273,6 +271,9 @@ class MarkerController extends Controller
         $reqBounds = json_decode($request->get("bounds"));
         $searchType = $request->get("searchType");
         $withOthers = $request->get("withOthers");
+
+        if(empty($reqBounds))
+            throw new ApiException(400, 'Bounds required.');
 
         $searchTypes = array();
         if(!empty($searchType)) {

@@ -60,25 +60,27 @@ function imageOptimization(input) {
             var image = new Image();
             image.src = e.target.result;
             // Resize the image
-            var canvas = document.createElement('canvas'),
-                width = image.width,
-                height = image.height;
-            if (width > height) {
-                if (width > MAX_IMG_SIZE) {
-                    height *= MAX_IMG_SIZE / width;
-                    width = MAX_IMG_SIZE;
+            image.onload = function() {
+                var canvas = document.createElement('canvas'),
+                    width = image.width,
+                    height = image.height;
+                if (width > height) {
+                    if (width > MAX_IMG_SIZE) {
+                        height *= MAX_IMG_SIZE / width;
+                        width = MAX_IMG_SIZE;
+                    }
+                } else {
+                    if (height > MAX_IMG_SIZE) {
+                        width *= MAX_IMG_SIZE / height;
+                        height = MAX_IMG_SIZE;
+                    }
                 }
-            } else {
-                if (height > MAX_IMG_SIZE) {
-                    width *= MAX_IMG_SIZE / height;
-                    height = MAX_IMG_SIZE;
-                }
+                canvas.width = width;
+                canvas.height = height;
+                canvas.getContext('2d').drawImage(image, 0, 0, width, height);
+                var dataUrl = canvas.toDataURL('image/jpeg');
+                imageBlob = dataURLToBlob(dataUrl);
             }
-            canvas.width = width;
-            canvas.height = height;
-            canvas.getContext('2d').drawImage(image, 0, 0, width, height);
-            var dataUrl = canvas.toDataURL('image/jpeg');
-            imageBlob = dataURLToBlob(dataUrl);
         };
 
         reader.readAsDataURL(file);
