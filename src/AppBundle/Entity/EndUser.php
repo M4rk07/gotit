@@ -56,7 +56,6 @@ class EndUser implements AdvancedUserInterface, \Serializable
      */
     private $last_name;
     /**
-     * @Assert\NotBlank()
      * @Assert\Length(min=5, max=30, minMessage="Password should be minimum 5 characters long.", maxMessage="Password should be maximum 30 characters long.")
      * @SRL\Exclude
      */
@@ -104,6 +103,7 @@ class EndUser implements AdvancedUserInterface, \Serializable
     /**
      * @ORM\Column(type="string")
      * @SRL\Type("string")
+     * @Assert\Choice(choices={"ROLE_USER", "ROLE_ADMIN"}, message="Choose a valid role.")
      */
     private $role = 'ROLE_USER';
 

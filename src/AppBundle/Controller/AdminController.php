@@ -9,6 +9,7 @@
 namespace AppBundle\Controller;
 
 
+use AppBundle\Exception\ApiException;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerBuilder;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -40,6 +41,7 @@ class AdminController extends Controller
 
     /**
      * @Route("/admin/users", name="admin_users")
+     * @Method({"GET"})
      */
     public function usersAction (Request $request)
     {
@@ -148,6 +150,59 @@ class AdminController extends Controller
         $em->flush();
 
         return new Response(null, 200, array("Content-Type" => "application/json"));
+    }
+
+    /**
+     * @Route("/admin/users", name="admin_update_user")
+     * @Method({"POST"})
+     *
+     * REST ROUTE
+     */
+    public function updateUserAction (Request $request)
+    {
+        $userId = $request->request->get('id');
+        $columnId = $request->request->get('columnId');
+        $value = $request->request->get('value');
+
+        if(empty($value))
+            return new Response("Value is required.", 400);
+
+        $em = $this->getDoctrine()->getManager();
+
+        $user = $em->getRepository('AppBundle:EndUser')->find($userId);
+        if(empty($user))
+            return new Response("User doesn't exist.", 400);
+
+        if($columnId == 1) {
+            $user->setFirstName($value);
+        }
+        else if($columnId == 2) {
+            $user->setLastName($value);
+        }
+        else if($columnId == 3) {
+            $user->setUsername($value);
+        }
+        else if($columnId == 4) {
+            $user->setPhoneNumber($value);
+        }
+        else if($columnId == 6) {
+            $user->setRole($value);
+        }
+        else
+            return new Response("Not possible to edit requested field.", 400);
+
+        $validator = $this->get('validator');
+        $euErrors = $validator->validate($user);
+        if(count($euErrors) > 0)
+            return new Response($euErrors[0]->getMessage(), 400);
+
+        try {
+            $em->flush();
+        } catch (\Exception $e) {
+            return new Response("User with same ID already exist.", 400);
+        }
+
+        return new Response($value, 200);
     }
 
 }

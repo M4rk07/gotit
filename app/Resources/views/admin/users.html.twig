@@ -22,7 +22,8 @@
                                 <thead>
                                     <tr>
                                         <th>ID</th>
-                                        <th>Full Name</th>
+                                        <th>First Name</th>
+                                        <th>Last Name</th>
                                         <th>Email</th>
                                         <th>Phone number</th>
                                         <th>Time Registered</th>
@@ -32,9 +33,10 @@
                                 </thead>
                                 <tbody>
                                 {% for user in users %}
-                                    <tr class="odd gradeX">
+                                    <tr class="odd gradeX" id="{{ user.getUserId }}">
                                         <td>{{ user.getUserId }}</td>
-                                        <td>{{ user.getFirstName }} {{ user.getLastName }}</td>
+                                        <td>{{ user.getFirstName }}</td>
+                                        <td>{{ user.getLastName }}</td>
                                         <td>{{ user.getUsername }}</td>
                                         <td>{{ user.getPhoneNumber }}</td>
                                         <td>{{ user.getDateTime|date('d.m.Y') }}</td>
@@ -68,8 +70,12 @@
     {{ parent() }}
     <script>
         $(document).ready(function() {
-            $('#dataTables-users').DataTable({
+            var tu = $('#dataTables-users').dataTable({
                 responsive: true
+            });
+
+            tu.makeEditable({
+                sUpdateURL: "{{ path('admin_update_user') }}"
             });
         });
 
