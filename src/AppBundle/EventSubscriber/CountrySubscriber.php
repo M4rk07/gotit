@@ -33,7 +33,7 @@ class CountrySubscriber implements EventSubscriberInterface
         $geopluginData = unserialize(file_get_contents($file));
 
         if(!isset($geopluginData['geoplugin_countryCode']) || empty($geopluginData['geoplugin_countryCode']) || $geopluginData['geoplugin_countryCode']!='RS')
-            throw new AccessDeniedHttpException('This action needs a valid token!');
+            throw new AccessDeniedHttpException('Application is only available in Serbia.');
 
     }
 

@@ -115,8 +115,6 @@ class MarkerController extends Controller
         // Generate a unique name for the file before saving it
         $item->saveImage();
 
-
-
         $statistics = $em->getRepository('AppBundle:Statistics')->find('MAIN');
         $statistics->incNumOfItems();
 
